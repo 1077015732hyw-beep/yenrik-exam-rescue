@@ -1,0 +1,181 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 680;
+  white-space: nowrap;
+}
+
+.button:hover {
+  border-color: color-mix(in srgb, var(--primary) 44%, var(--border));
+  color: var(--primary);
+}
+
+.button.primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.button.primary:hover {
+  color: #ffffff;
+}
+
+.button.ghost {
+  background: transparent;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.course-card {
+  display: grid;
+  gap: 18px;
+  min-height: 150px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.course-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 38%, var(--border));
+}
+
+.course-icon {
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.course-card strong {
+  align-self: end;
+  font-size: 1.04rem;
+  line-height: 1.45;
+}
+
+.resource-list {
+  display: grid;
+  gap: 14px;
+}
+
+.resource-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.resource-body h2 {
+  margin-bottom: 8px;
+  font-size: 1.16rem;
+}
+
+.resource-body p {
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
+.resource-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.viewer-meta {
+  position: sticky;
+  top: calc(var(--header-height) + 20px);
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.viewer-meta h1 {
+  margin-bottom: 12px;
+  font-size: 1.6rem;
+}
+
+.viewer-meta p {
+  margin-bottom: 14px;
+  color: var(--muted);
+}
+
+.viewer-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pdf-viewer object,
+.pdf-viewer iframe {
+  width: 100%;
+  height: 76vh;
+  min-height: 620px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.footer-nav a:hover {
+  color: var(--primary);
+}
+
+.simple-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 28px;
+  margin: 18px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 32px;
+}
+
+.qr-placeholder {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1px dashed color-mix(in srgb, var(--muted) 50%, transparent);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+}

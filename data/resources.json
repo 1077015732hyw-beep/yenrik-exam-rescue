@@ -1,0 +1,66 @@
+[
+  {
+    "id": "advanced-math-final-review",
+    "title": "高等数学期末复习重点",
+    "subject": "advanced-math",
+    "file": "/yenrik-exam-rescue/pdf/advanced-math/final-review.pdf",
+    "updated": "2026-06-14",
+    "description": "依据课堂划重点和个人笔记整理，覆盖极限、导数、积分与微分方程。"
+  },
+  {
+    "id": "advanced-math-formula-sheet",
+    "title": "高等数学公式整理",
+    "subject": "advanced-math",
+    "file": "/yenrik-exam-rescue/pdf/advanced-math/formula-sheet.pdf",
+    "updated": "2026-06-10",
+    "description": "常用公式、计算方法与容易混淆的条件整理。"
+  },
+  {
+    "id": "linear-algebra-final-review",
+    "title": "线性代数期末复习提纲",
+    "subject": "linear-algebra",
+    "file": "/yenrik-exam-rescue/pdf/linear-algebra/final-review.pdf",
+    "updated": "2026-06-14",
+    "description": "矩阵运算、行列式、向量组、线性方程组与特征值相关内容整理。"
+  },
+  {
+    "id": "linear-algebra-key-exercises",
+    "title": "线性代数重点题型笔记",
+    "subject": "linear-algebra",
+    "file": "/yenrik-exam-rescue/pdf/linear-algebra/key-exercises.pdf",
+    "updated": "2026-06-11",
+    "description": "按照课堂强调的题型整理解题步骤和注意事项。"
+  },
+  {
+    "id": "marxism-core-notes",
+    "title": "马克思主义基本原理复习笔记",
+    "subject": "marxism",
+    "file": "/yenrik-exam-rescue/pdf/marxism/core-outline.pdf",
+    "updated": "2026-06-08",
+    "description": "核心概念、基本原理与常见论述题表述整理。"
+  },
+  {
+    "id": "marxism-essay-notes",
+    "title": "马原论述题整理",
+    "subject": "marxism",
+    "file": "/yenrik-exam-rescue/pdf/marxism/essay-bank.pdf",
+    "updated": "2026-05-30",
+    "description": "根据课堂重点整理答题结构、关键词和表述方向。"
+  },
+  {
+    "id": "college-english-writing-notes",
+    "title": "大学英语作文整理",
+    "subject": "college-english",
+    "file": "/yenrik-exam-rescue/pdf/college-english/writing-kit.pdf",
+    "updated": "2026-06-12",
+    "description": "作文常用表达、段落结构和课堂强调的写作注意事项。"
+  },
+  {
+    "id": "college-english-reading-notes",
+    "title": "大学英语阅读笔记",
+    "subject": "college-english",
+    "file": "/yenrik-exam-rescue/pdf/college-english/reading-notes.pdf",
+    "updated": "2026-06-04",
+    "description": "阅读题定位、同义替换和常见错误选项整理。"
+  }
+]

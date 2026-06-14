@@ -1,0 +1,104 @@
+@media (max-width: 900px) {
+  .course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .viewer-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .viewer-meta {
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --header-height: 64px;
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  .site-header {
+    padding: 0 16px;
+  }
+
+  .brand span {
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .site-nav {
+    position: fixed;
+    inset: var(--header-height) 12px auto 12px;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  body.nav-open .site-nav {
+    display: flex;
+  }
+
+  .site-nav a,
+  .icon-button {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .section,
+  .page-title,
+  .resource-section,
+  .document-page,
+  .site-footer {
+    width: min(100% - 28px, var(--container));
+  }
+
+  .cover-page {
+    min-height: calc(100vh - var(--header-height) - 150px);
+    padding-top: 62px;
+    padding-bottom: 56px;
+  }
+
+  .course-grid,
+  .support-grid,
+  .simple-list {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-card {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pdf-viewer object,
+  .pdf-viewer iframe {
+    height: 68vh;
+    min-height: 460px;
+  }
+}
+
+@media (max-width: 460px) {
+  .resource-actions {
+    grid-template-columns: 1fr;
+  }
+}
