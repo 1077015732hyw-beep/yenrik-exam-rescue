@@ -1,0 +1,56 @@
+[
+  {
+    "id": "advanced-math",
+    "name": "高等数学",
+    "icon": "📐",
+    "color": "#2563eb",
+    "description": "极限、导数、积分与微分方程",
+    "level": "重点",
+    "resourceCount": 3
+  },
+  {
+    "id": "college-english",
+    "name": "大学英语",
+    "icon": "📚",
+    "color": "#22c55e",
+    "description": "阅读理解、翻译、写作与听力",
+    "level": "高频",
+    "resourceCount": 2
+  },
+  {
+    "id": "marxism",
+    "name": "马克思主义原理",
+    "icon": "⚑",
+    "color": "#ef4444",
+    "description": "概念辨析、论述题与核心原理",
+    "level": "背诵",
+    "resourceCount": 2
+  },
+  {
+    "id": "biology",
+    "name": "普通生物学",
+    "icon": "🧬",
+    "color": "#14b8a6",
+    "description": "细胞、遗传、生态与实验题",
+    "level": "整理",
+    "resourceCount": 2
+  },
+  {
+    "id": "chemistry",
+    "name": "大学化学",
+    "icon": "⚗️",
+    "color": "#f59e0b",
+    "description": "物质结构、反应平衡与计算题",
+    "level": "刷题",
+    "resourceCount": 2
+  },
+  {
+    "id": "computer",
+    "name": "计算机基础",
+    "icon": "💻",
+    "color": "#8b5cf6",
+    "description": "Office、网络基础、算法与选择题",
+    "level": "速通",
+    "resourceCount": 2
+  }
+]

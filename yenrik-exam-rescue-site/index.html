@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Exam Rescue 是一个面向大学生的复习资料分享平台。">
+    <title>Exam Rescue | Pass the exam. Save the GPA.</title>
+    <link rel="icon" href="/yenrik-exam-rescue/assets/logos/exam-rescue.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/yenrik-exam-rescue/css/style.css">
+    <link rel="stylesheet" href="/yenrik-exam-rescue/css/components.css">
+    <link rel="stylesheet" href="/yenrik-exam-rescue/css/mobile.css">
+  </head>
+  <body data-page="home">
+    <header class="site-header" data-site-header>
+      <a class="brand" href="/yenrik-exam-rescue/">
+        <img src="/yenrik-exam-rescue/assets/logos/exam-rescue.svg" alt="" width="36" height="36">
+        <span>Exam Rescue</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="打开导航" data-nav-toggle>☰</button>
+      <nav class="site-nav" data-site-nav aria-label="主导航">
+        <a href="/yenrik-exam-rescue/" data-nav-link="home">首页</a>
+        <a href="/yenrik-exam-rescue/pages/subject.html" data-nav-link="subjects">学科</a>
+        <a href="/yenrik-exam-rescue/pages/search.html" data-nav-link="search">搜索</a>
+        <a href="/yenrik-exam-rescue/pages/about.html" data-nav-link="about">关于</a>
+        <button class="icon-button" type="button" aria-label="切换深色模式" title="切换深色模式" data-theme-toggle>◐</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero section">
+        <div class="hero-copy">
+          <p class="eyebrow">University final survival kit</p>
+          <h1>Exam Rescue</h1>
+          <p class="hero-line">Pass the exam.<br>Save the GPA.</p>
+          <form class="search-shell" role="search" data-global-search>
+            <img src="/yenrik-exam-rescue/assets/icons/search.svg" alt="" width="22" height="22">
+            <label class="sr-only" for="home-search">搜索资料标题</label>
+            <input id="home-search" name="q" type="search" placeholder="搜索资料标题，例如 高数、作文、Office" autocomplete="off">
+            <button class="button primary" type="submit">搜索</button>
+          </form>
+        </div>
+        <div class="hero-panel" aria-label="Exam Rescue 摘要">
+          <img src="/yenrik-exam-rescue/assets/banners/exam-rescue-banner.svg" alt="文档式复习资料界面预览">
+        </div>
+      </section>
+
+      <section class="section compact">
+        <div class="stats-grid" data-stats-cards>
+          <article class="stat-card">
+            <span>累计访问</span>
+            <strong data-stat="visits">--</strong>
+          </article>
+          <article class="stat-card">
+            <span>资料数量</span>
+            <strong data-stat="resources">--</strong>
+          </article>
+          <article class="stat-card">
+            <span>下载次数</span>
+            <strong data-stat="downloads">--</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="section compact">
+        <div class="entry-grid">
+          <a class="entry-card danger" href="/yenrik-exam-rescue/pages/search.html?type=%E6%80%A5%E6%95%91%E5%8C%85">
+            <span>🔥</span>
+            <strong>急救包</strong>
+            <small>考前 72 小时优先看</small>
+          </a>
+          <a class="entry-card primary" href="/yenrik-exam-rescue/pages/subject.html">
+            <span>📚</span>
+            <strong>学科资料</strong>
+            <small>按课程快速定位</small>
+          </a>
+          <a class="entry-card warning" href="/yenrik-exam-rescue/pages/search.html?type=%E9%AB%98%E9%A2%91%E8%80%83%E7%82%B9">
+            <span>⚠️</span>
+            <strong>高频考点</strong>
+            <small>把分数拿稳</small>
+          </a>
+          <a class="entry-card neutral" href="/yenrik-exam-rescue/pages/search.html?type=%E5%8E%86%E5%8F%B2%E8%B5%84%E6%96%99">
+            <span>📦</span>
+            <strong>历史资料</strong>
+            <small>题型和复习轨迹</small>
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Subjects</p>
+            <h2>学科卡片</h2>
+          </div>
+          <a class="text-link" href="/yenrik-exam-rescue/pages/subject.html">查看全部</a>
+        </div>
+        <div class="subject-grid" data-subject-list></div>
+      </section>
+
+      <section class="section two-column">
+        <div>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Resources</p>
+              <h2>精选资料</h2>
+            </div>
+            <a class="text-link" href="/yenrik-exam-rescue/pages/search.html">搜索资料</a>
+          </div>
+          <div class="resource-list" data-featured-resources></div>
+        </div>
+        <aside class="updates-panel">
+          <div class="section-heading flush">
+            <div>
+              <p class="eyebrow">Updates</p>
+              <h2>最新更新</h2>
+            </div>
+          </div>
+          <div class="timeline" data-updates-list></div>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Exam Rescue</span>
+      <span>Pure static. GitHub Pages ready.</span>
+    </footer>
+
+    <script type="module" src="/yenrik-exam-rescue/js/app.js"></script>
+  </body>
+</html>
