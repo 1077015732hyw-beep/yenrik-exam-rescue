@@ -19,12 +19,5 @@
     "icon": "📝",
     "description": "依据课堂讲授重点与笔记整理",
     "page": "pages/marxism.html"
-  },
-  {
-    "id": "college-english",
-    "name": "大学英语",
-    "icon": "📖",
-    "description": "围绕复习范围与常见题型整理",
-    "page": "pages/college-english.html"
   }
 ]

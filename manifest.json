@@ -1,7 +1,7 @@
 {
-  "name": "雁塔提名 · Yanta Archive",
+  "name": "期末复习材料 · 雁塔提名",
   "short_name": "雁塔提名",
-  "description": "一个持续整理、排版与分享知识的数字档案馆。",
+  "description": "大学期末复习资料库，支持在线预览与下载。",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fafaf9",

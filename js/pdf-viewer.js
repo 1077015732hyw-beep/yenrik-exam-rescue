@@ -60,7 +60,7 @@ export function initPdfViewer({ subjects, resources }) {
     <p class="back-link"><a href="${resolvePagePath(subject?.page)}">← 返回${escapeHtml(subject?.name || "课程")}</a></p>
     <h1>${escapeHtml(resource.title)}</h1>
     <p>${escapeHtml(resource.description)}</p>
-    <time datetime="${escapeHtml(resource.updated)}">更新于 ${escapeHtml(resource.updated)}${resource.pages ? ` · ${resource.pages} 页` : ""}</time>
+    <time datetime="${escapeHtml(resource.updated)}">更新于 ${escapeHtml(resource.updated)}</time>
     ${(resource.tags || []).map((t) => `<span class="resource-tag label">${escapeHtml(t)}</span>`).join(" ")}
     <div class="viewer-actions">
       <a class="button primary" href="${pdfPath}" target="_blank" rel="noopener">在新窗口打开</a>

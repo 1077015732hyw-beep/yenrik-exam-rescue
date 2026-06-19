@@ -1,15 +1,13 @@
 [
+  { "date": "2026-06-20", "title": "精简站点：移除大学英语、页数机制、最近更新区块，清理孤立资源", "type": "site" },
   { "date": "2026-06-20", "title": "网站重启为「雁塔提名 Yanta Archive」，全新品牌与设计", "type": "site" },
   { "date": "2026-06-20", "title": "新增继续阅读、最近浏览、标签系统、全站统计", "type": "site" },
-  { "date": "2026-06-20", "title": "新增 PWA 支持，可添加到手机桌面", "type": "site" },
-  { "date": "2026-06-20", "title": "新增自定义 404 页面", "type": "site" },
+  { "date": "2026-06-20", "title": "新增 PWA 支持、自定义 404、面包屑导航", "type": "site" },
   { "date": "2026-06-20", "title": "新增 PDF 键盘翻页、暗色反色模式", "type": "site" },
   { "date": "2026-06-18", "title": "高等数学：更新二重积分解答过程，修正最后一题题目及答案", "type": "content" },
   { "date": "2026-06-16", "title": "马克思主义基本原理资料上线", "type": "content" },
   { "date": "2026-06-15", "title": "线性代数资料上线（带答案 + 空白版）", "type": "content" },
   { "date": "2026-06-14", "title": "高等数学空白版自测卷上线", "type": "content" },
-  { "date": "2026-06-12", "title": "大学英语作文整理上线", "type": "content" },
-  { "date": "2026-06-04", "title": "大学英语阅读笔记上线", "type": "content" },
   { "date": "2026-06-19", "title": "修复 resources.json 格式问题，PDF 预览恢复正常", "type": "fix" },
   { "date": "2026-06-19", "title": "修复资料标题错误、描述重复、id 冲突等问题", "type": "fix" }
 ]

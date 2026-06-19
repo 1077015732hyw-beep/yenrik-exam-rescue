@@ -7,7 +7,6 @@
     "updated": "2026-06-18",
     "tag": "answer",
     "tags": ["高频考点", "真题", "2026版"],
-    "pages": 42,
     "description": "65327060620206 版本修正了第 34 题的题目及答案错误，同时优化了二重积分部分题目的解答过程，使其与课堂教学内容保持一致。"
   },
   {
@@ -18,7 +17,6 @@
     "updated": "2026-06-14",
     "tag": "blank",
     "tags": ["自测", "2026版"],
-    "pages": 42,
     "description": "65327060620207 版本修正了第 34 题的题目，适合用作自测练习。"
   },
   {
@@ -29,7 +27,6 @@
     "updated": "2026-06-15",
     "tag": "answer",
     "tags": ["高频考点", "必背", "2026版"],
-    "pages": 28,
     "description": "围绕矩阵、行列式与线性方程组整理，附完整解答过程。"
   },
   {
@@ -40,7 +37,6 @@
     "updated": "2026-06-15",
     "tag": "blank",
     "tags": ["自测", "2026版"],
-    "pages": 28,
     "description": "空白版本，适合用作自测练习。"
   },
   {
@@ -51,7 +47,6 @@
     "updated": "2026-06-16",
     "tag": "answer",
     "tags": ["必背", "考前速记", "2026版"],
-    "pages": 35,
     "description": "依据课堂讲授重点与笔记整理，附参考答案。"
   },
   {
@@ -62,29 +57,6 @@
     "updated": "2026-06-16",
     "tag": "blank",
     "tags": ["自测", "考前速记", "2026版"],
-    "pages": 35,
     "description": "空白版本，适合用作背诵自测。"
-  },
-  {
-    "id": "college-english-writing",
-    "title": "大学英语作文整理",
-    "subject": "college-english",
-    "file": "pdf/college-english/writing-kit.pdf",
-    "updated": "2026-06-12",
-    "tag": "answer",
-    "tags": ["模板", "高频考点", "2026版"],
-    "pages": 18,
-    "description": "作文常用表达、段落结构和课堂强调的写作注意事项。"
-  },
-  {
-    "id": "college-english-reading",
-    "title": "大学英语阅读笔记",
-    "subject": "college-english",
-    "file": "pdf/college-english/reading-notes.pdf",
-    "updated": "2026-06-04",
-    "tag": "answer",
-    "tags": ["高频考点", "易错", "2026版"],
-    "pages": 22,
-    "description": "阅读题定位、同义替换和常见错误选项整理。"
   }
 ]

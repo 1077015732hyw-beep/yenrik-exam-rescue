@@ -10,14 +10,15 @@
 - **继续阅读** — 自动记住上次看到哪份资料、第几页
 - **最近浏览** — 首页展示最近打开过的资料
 - **标签系统** — 资料支持「高频考点」「必背」「自测」等标签筛选
-- **全站统计** — 首页显示资料数 / 总页数 / 科目数 / 更新次数
-- **最近更新** — 首页展示更新时间线
+- **全站统计** — 首页显示资料数 / 科目数 / 更新次数
 - **暗色模式** — 跟随系统 + 手动切换，PDF 支持反色护眼
 - **PWA** — 可添加到手机桌面
 - **自定义 404** — 不用 GitHub 默认页面
 - **面包屑导航** — 知道自己在哪
 - **资料筛选与排序** — 按标签筛选、按时间或名称排序
 - **分享链接** — 一键复制当前资料页地址
+- **Open Graph** — 分享到微信 / QQ 时显示预览卡片
+- **隐私保护** — 全站 noindex,nofollow，不被搜索引擎收录
 
 ## 科目
 
@@ -26,7 +27,6 @@
 | 高等数学 | 2 |
 | 线性代数 | 2 |
 | 马克思主义基本原理 | 2 |
-| 大学英语 | 2 |
 
 ## 技术栈
 
@@ -40,50 +40,42 @@
 
 ```
 .
-├── index.html              # 首页
-├── 404.html                # 自定义 404
-├── manifest.json           # PWA 配置
+├── index.html                # 首页
+├── 404.html                  # 自定义 404
+├── manifest.json             # PWA 配置
+├── README.md
 ├── css/
-│   └── style.css           # 全局样式
+│   └── style.css             # 全局样式
 ├── js/
-│   ├── app.js              # 主逻辑
-│   ├── pdf-viewer.js       # PDF 预览器
-│   └── sw.js               # Service Worker
+│   ├── app.js                # 主逻辑
+│   ├── pdf-viewer.js         # PDF 预览器
+│   └── sw.js                 # Service Worker
 ├── data/
-│   ├── subjects.json       # 科目数据
-│   ├── resources.json      # 资料数据（含标签、页数）
-│   └── updates.json        # 更新记录
+│   ├── subjects.json         # 科目数据
+│   ├── resources.json        # 资料数据（含标签）
+│   └── updates.json          # 更新记录
 ├── pages/
-│   ├── exam-rescue.html    # 资料库入口
-│   ├── advanced-math.html  # 高等数学
-│   ├── linear-algebra.html # 线性代数
-│   ├── marxism.html        # 马克思主义基本原理
-│   ├── college-english.html# 大学英语
-│   ├── resource.html       # PDF 预览页
-│   ├── about.html          # 关于
+│   ├── exam-rescue.html      # 资料库入口
+│   ├── advanced-math.html    # 高等数学
+│   ├── linear-algebra.html   # 线性代数
+│   ├── marxism.html          # 马克思主义基本原理
+│   ├── resource.html         # PDF 预览页
+│   ├── about.html            # 关于
 │   └── acknowledgements.html # 鸣谢
 ├── assets/
-│   ├── logos/              # Logo
-│   ├── banners/            # 横幅
-│   ├── covers/             # 科目封面
-│   └── icons/              # 图标
-└── pdf/                    # PDF 文件
+│   ├── logos/                # Logo
+│   └── covers/               # 科目封面
+└── pdf/                      # PDF 文件
     ├── advanced-math/
     ├── linear-algebra/
-    ├── marxism/
-    └── college-english/
+    └── marxism/
 ```
 
 ## 本地预览
 
 ```bash
-# 进入项目目录
 cd yanta-archive
-
-# 启动本地服务器（任选一种）
 python3 -m http.server 8080
-# 或
-npx serve
 ```
 
 浏览器打开 `http://localhost:8080` 即可。

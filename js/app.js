@@ -22,7 +22,7 @@ const DATA_PATHS = {
   resources: `${BASE_PATH}data/resources.json`,
   updates: `${BASE_PATH}data/updates.json`,
 };
-const MODAL_VERSION = "2026-06-20-v2";
+const MODAL_VERSION = "2026-06-20-v3";
 const STORAGE_KEYS = {
   theme: "ya-theme",
   modalVersion: "ya-modal-version",
@@ -46,11 +46,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       ]);
 
       if (pageType === "home") {
-        renderStats(subjects, resources);
+        let updateCount = 0;
+        try { updateCount = (await getJSON(DATA_PATHS.updates)).length; } catch {}
+        renderStats(subjects, resources, updateCount);
         renderContinueReading(subjects, resources);
         renderRecent(subjects, resources);
         renderCourseMeta(subjects, resources);
-        renderHomeUpdates();
         showEntryModal(subjects, resources);
       }
       if (pageType === "course") {
@@ -134,16 +135,13 @@ function setupPWA() {
 }
 
 /* ---- Stats ---- */
-function renderStats(subjects, resources) {
+function renderStats(subjects, resources, updateCount) {
   const el = document.querySelector("[data-stats]");
   if (!el) return;
   const totalResources = resources.length;
-  const totalPages = resources.reduce((sum, r) => sum + (r.pages || 0), 0);
   const totalSubjects = subjects.length;
-  const updateCount = 13; // matches updates.json length
   el.innerHTML = `
     <div class="stat-item"><strong>${totalResources}</strong><span>份资料</span></div>
-    <div class="stat-item"><strong>${totalPages}</strong><span>总页数</span></div>
     <div class="stat-item"><strong>${totalSubjects}</strong><span>门科目</span></div>
     <div class="stat-item"><strong>${updateCount}</strong><span>次更新</span></div>`;
 }
@@ -199,31 +197,6 @@ function renderRecent(subjects, resources) {
           </a>`;
   }).join("")}
     </div>`;
-}
-
-/* ---- Home Updates ---- */
-async function renderHomeUpdates() {
-  const el = document.querySelector("[data-home-updates]");
-  if (!el) return;
-  try {
-    const updates = await getJSON(DATA_PATHS.updates);
-    const recent = updates.slice(0, 6);
-    const typeLabel = { content: "内容", site: "站点", fix: "修复" };
-    el.innerHTML = `
-      <div class="section-header">
-        <h2>最近更新</h2>
-      </div>
-      <div class="update-list">
-        ${recent.map((u) => `
-          <div class="update-item">
-            <span class="update-date">${escapeHtml(u.date.slice(5))}</span>
-            <span class="update-badge ${escapeHtml(u.type)}">${typeLabel[u.type] || u.type}</span>
-            <span class="update-title">${escapeHtml(u.title)}</span>
-          </div>`).join("")}
-      </div>`;
-  } catch {
-    el.style.display = "none";
-  }
 }
 
 /* ---- Home: course meta ---- */
@@ -311,7 +284,7 @@ function renderResourceCard(resource) {
         <h3>${answerTag} ${escapeHtml(resource.title)}</h3>
         <p>${escapeHtml(resource.description)}</p>
         <div class="resource-tags">${tagsHtml}</div>
-        <time datetime="${escapeHtml(resource.updated)}">更新于 ${escapeHtml(resource.updated)}${resource.pages ? ` · ${resource.pages} 页` : ""}</time>
+        <time datetime="${escapeHtml(resource.updated)}">更新于 ${escapeHtml(resource.updated)}</time>
       </div>
       <div class="resource-actions">
         <a class="button primary" href="${BASE_PATH}pages/resource.html?id=${encodeURIComponent(resource.id)}">在线查看</a>
@@ -389,7 +362,7 @@ function showEntryModal(subjects, resources) {
       <div class="modal-panels">
         <div class="modal-panel active" data-panel="welcome">
           <h2>雁塔提名 · Yanta Archive</h2>
-          <p class="modal-desc">一个持续整理、排版与分享知识的数字档案馆。</p>
+          <p class="modal-desc">期末复习资料库，支持在线预览与下载。</p>
           <div class="modal-recent-label">最近更新</div>
           <div class="modal-updates">
             ${recent.map((r) => {
@@ -412,8 +385,7 @@ function showEntryModal(subjects, resources) {
             <div class="changelog-section">
               <h3>站点重建</h3>
               <ul>
-                <li>从 exam-rescue 重启为「雁塔提名 Yanta Archive」，定位为数字档案馆</li>
-                <li>新增导航：Exam Rescue / Works / Templates / Projects / About</li>
+                <li>从 exam-rescue 重启为「雁塔提名 Yanta Archive」</li>
                 <li>全新设计语言：克制的排版、暖色系底色、teal 主色调</li>
               </ul>
             </div>
@@ -423,13 +395,11 @@ function showEntryModal(subjects, resources) {
                 <li>继续阅读：自动记住上次看到哪份资料、第几页</li>
                 <li>最近浏览：首页显示最近打开过的资料</li>
                 <li>标签系统：资料支持「高频考点」「必背」「自测」等标签筛选</li>
-                <li>全站统计：首页显示资料数、总页数、科目数、更新次数</li>
-                <li>最近更新：首页展示更新时间线</li>
-                <li>PWA 支持：可添加到手机桌面，像 App 一样使用</li>
+                <li>全站统计：首页显示资料数、科目数、更新次数</li>
+                <li>PWA 支持：可添加到手机桌面</li>
                 <li>自定义 404 页面</li>
                 <li>PDF 键盘翻页（← →）+ 暗色反色模式</li>
-                <li>面包屑导航</li>
-                <li>资料排序与标签筛选</li>
+                <li>面包屑导航、资料排序与标签筛选</li>
               </ul>
             </div>
             <div class="changelog-section">
@@ -510,7 +480,7 @@ function cleanSitePath(file) {
 }
 
 function showLoadError() {
-  document.querySelectorAll("[data-course-resources], [data-resource-meta], [data-pdf-viewer], [data-stats], [data-continue-reading], [data-recent], [data-home-updates]").forEach((target) => {
+  document.querySelectorAll("[data-course-resources], [data-resource-meta], [data-pdf-viewer], [data-stats], [data-continue-reading], [data-recent]").forEach((target) => {
     target.innerHTML = '<div class="empty-state">加载失败，请刷新页面重试。</div>';
   });
 }
