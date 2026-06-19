@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="在线查看和下载 PDF 复习材料。">
+    <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)">
+    <title>资料查看 | 期末复习材料</title>
+    <link rel="icon" href="../assets/logos/exam-rescue.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body data-page="resource">
+    <header class="site-header" data-site-header>
+      <a class="brand" href="../index.html">
+        <img src="../assets/logos/exam-rescue.svg" alt="" width="28" height="28">
+        <span>yenrik-exam-rescue</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="打开导航" aria-expanded="false" data-nav-toggle>☰</button>
+      <nav class="site-nav" data-site-nav aria-label="主导航">
+        <a href="../index.html">首页</a>
+        <a href="./about.html">关于</a>
+        <a href="./acknowledgements.html">鸣谢</a>
+        <a href="./support.html">支持</a>
+        <button class="icon-button" type="button" aria-label="切换深色模式" title="切换深色模式" data-theme-toggle>◐</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="viewer-layout section">
+        <aside class="viewer-meta" data-resource-meta>
+          <div class="loading-state"><div class="spinner"></div><p>正在加载资料信息…</p></div>
+        </aside>
+        <div class="pdf-viewer" data-pdf-viewer>
+          <div class="loading-state"><div class="spinner"></div><p>正在准备预览…</p></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <nav class="footer-nav" aria-label="页脚导航">
+        <a href="./about.html">关于</a>
+        <a href="./acknowledgements.html">鸣谢</a>
+        <a href="./support.html">支持</a>
+        <span class="footer-copy">© 2026 yenrik-exam-rescue</span>
+      </nav>
+    </footer>
+
+    <script type="module" src="../js/app.js"></script>
+  </body>
+</html>
