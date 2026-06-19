@@ -1,0 +1,16 @@
+{
+  "name": "雁塔提名 · Yanta Archive",
+  "short_name": "雁塔提名",
+  "description": "一个持续整理、排版与分享知识的数字档案馆。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fafaf9",
+  "theme_color": "#0d7377",
+  "icons": [
+    {
+      "src": "./assets/logos/exam-rescue.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

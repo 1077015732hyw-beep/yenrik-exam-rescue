@@ -3,55 +3,60 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="关于本站、免责声明与联系方式。">
-    <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)">
-    <title>关于 | 期末复习材料</title>
+    <meta name="description" content="关于雁塔提名——一个由大学生长期维护的知识整理、排版与分享平台。">
+    <meta name="theme-color" content="#0d7377" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0c0a09" media="(prefers-color-scheme: dark)">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="关于 · 雁塔提名">
+    <meta property="og:description" content="一个由大学生长期维护的知识整理、排版与分享平台。">
+    <title>关于 | 雁塔提名</title>
     <link rel="icon" href="../assets/logos/exam-rescue.svg" type="image/svg+xml">
+    <link rel="manifest" href="../manifest.json">
     <link rel="stylesheet" href="../css/style.css">
   </head>
   <body data-page="about">
-    <header class="site-header" data-site-header>
+    <header class="site-header">
       <a class="brand" href="../index.html">
-        <img src="../assets/logos/exam-rescue.svg" alt="" width="28" height="28">
-        <span>yenrik-exam-rescue</span>
+        <img src="../assets/logos/exam-rescue.svg" alt="" width="26" height="26">
+        <span>雁塔提名</span>
+        <span class="brand-sub">Yanta Archive</span>
       </a>
       <button class="nav-toggle" type="button" aria-label="打开导航" aria-expanded="false" data-nav-toggle>☰</button>
-      <nav class="site-nav" data-site-nav aria-label="主导航">
-        <a href="../index.html">首页</a>
-        <a href="./about.html">关于</a>
-        <a href="./acknowledgements.html">鸣谢</a>
-        <a href="./support.html">支持</a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="./exam-rescue.html">Exam Rescue</a>
+        <a href="./about.html" class="active">关于</a>
         <button class="icon-button" type="button" aria-label="切换深色模式" title="切换深色模式" data-theme-toggle>◐</button>
       </nav>
     </header>
 
     <main class="document-main">
-      <article class="document-page section">
+      <div class="container-wide"><nav class="breadcrumb" data-breadcrumb></nav></div>
+      <article class="document-page">
         <h1>关于本站</h1>
-        <p>本站是一个个人维护的期末复习资料分享项目，用于整理和分享课堂重点、个人笔记以及 PDF 复习材料。所有资料均依据课堂内容和教师讲授重点整理形成。</p>
+        <p>雁塔提名（Yanta Archive）是一个个人维护的知识整理项目，目前以 Exam Rescue（期末复习资料库）为主要内容。</p>
+        <p>所有资料依据课堂重点整理，支持在线预览与下载。核心理念是：收集 → 提炼 → 排版 → 分享。</p>
 
         <h2>免责声明</h2>
-        <p>本站不提供考试原题、泄题资料或任何违规内容。所有资料仅供学习交流参考，请以教师要求、教材内容及学校通知为准。</p>
-
-        <h2>资料说明</h2>
-        <p>所有资料均由站长独立整理。由于个人理解能力有限，资料可能存在错误、遗漏或表述不准确的情况。如发现错误，欢迎联系站长反馈指正。</p>
+        <p>本站所有资料均为个人整理，仅供学习参考，不构成任何考试保证。请以任课教师发布的官方材料为准。如发现资料内容有错漏，欢迎联系反馈，会及时勘误。资料仅供个人学习使用，请勿用于商业用途。</p>
 
         <h2>联系方式</h2>
-        <p>如发现资料错误、链接失效、内容侵权或其他问题，欢迎通过以下方式联系站长反馈。</p>
+        <p>如发现资料错误、链接失效、内容侵权或其他问题，欢迎通过以下方式联系。</p>
         <div class="contact-card">
           <p>📧 邮箱：<a href="mailto:contact@example.com">contact@example.com</a></p>
-          <p>💡 请将上方邮箱替换为你的实际联系方式。</p>
+          <p>💡 请将上方邮箱替换为实际联系方式。</p>
         </div>
+
+        <h2>技术说明</h2>
+        <p>本站基于 GitHub Pages 部署，使用纯 HTML / CSS / JavaScript 构建，无后端。阅读进度、最近浏览等数据存储在浏览器 localStorage 中，不上传任何服务器。</p>
       </article>
     </main>
 
     <footer class="site-footer">
       <nav class="footer-nav" aria-label="页脚导航">
+        <a href="./exam-rescue.html">Exam Rescue</a>
         <a href="./about.html">关于</a>
         <a href="./acknowledgements.html">鸣谢</a>
-        <a href="./support.html">支持</a>
-        <span class="footer-copy">© 2026 yenrik-exam-rescue</span>
+        <span class="footer-copy">© 2026 雁塔提名 · Yanta Archive</span>
       </nav>
     </footer>
 

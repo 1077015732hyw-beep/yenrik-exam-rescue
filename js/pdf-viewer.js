@@ -1,11 +1,6 @@
 /**
- * pdf-viewer.js — PDF Viewer with Lazy Loading + CDN Fallback
- *
- * Path strategy:
- * - JSON paths are site-root-relative (e.g. "pdf/xxx.pdf"), no repo name.
- * - cleanSitePath() handles legacy "/yenrik-exam-rescue/..." format too.
- * - This module runs on pages/resource.html, so resolved paths use "../" prefix.
- * - No hardcoded repo name anywhere.
+ * pdf-viewer.js — PDF Viewer
+ * Features: CDN fallback, keyboard nav, reading progress, dark invert
  */
 
 const PDFJS_SOURCES = [
@@ -26,6 +21,11 @@ let totalPages = 0;
 let currentScale = 1.3;
 let isRendering = false;
 let pendingPage = null;
+let isInverted = false;
+
+const STORAGE_KEYS = {
+  readingProgress: "ya-reading-progress",
+};
 
 export function initPdfViewer({ subjects, resources }) {
   const params = new URLSearchParams(window.location.search);
@@ -49,17 +49,23 @@ export function initPdfViewer({ subjects, resources }) {
     return;
   }
 
-  document.title = `${resource.title} | 期末复习材料`;
+  document.title = `${resource.title} | 雁塔提名`;
   const pdfPath = resolvePdfPath(resource.file);
+
+  // Restore reading progress
+  const progress = JSON.parse(localStorage.getItem(STORAGE_KEYS.readingProgress) || "null");
+  const startPage = (progress && progress.id === id) ? (progress.page || 1) : 1;
 
   meta.innerHTML = `
     <p class="back-link"><a href="${resolvePagePath(subject?.page)}">← 返回${escapeHtml(subject?.name || "课程")}</a></p>
     <h1>${escapeHtml(resource.title)}</h1>
     <p>${escapeHtml(resource.description)}</p>
-    <time datetime="${escapeHtml(resource.updated)}">更新于 ${escapeHtml(resource.updated)}</time>
+    <time datetime="${escapeHtml(resource.updated)}">更新于 ${escapeHtml(resource.updated)}${resource.pages ? ` · ${resource.pages} 页` : ""}</time>
+    ${(resource.tags || []).map((t) => `<span class="resource-tag label">${escapeHtml(t)}</span>`).join(" ")}
     <div class="viewer-actions">
       <a class="button primary" href="${pdfPath}" target="_blank" rel="noopener">在新窗口打开</a>
       <a class="button ghost" href="${pdfPath}" download>下载 PDF</a>
+      <button class="button ghost" type="button" data-share-link>复制链接</button>
     </div>`;
 
   viewer.innerHTML = `
@@ -69,14 +75,27 @@ export function initPdfViewer({ subjects, resources }) {
         <path d="M14 2v6h6"/>
       </svg>
       <h3>在线预览</h3>
-      <p>点击下方按钮加载 PDF 预览，支持翻页和缩放。</p>
+      <p>点击下方按钮加载 PDF 预览，支持翻页、缩放和键盘操作。</p>
+      ${startPage > 1 ? `<p style="color:var(--primary);font-weight:600;">📖 上次阅读到第 ${startPage} 页</p>` : ""}
       <button class="button primary" type="button" data-pdf-start>开始预览</button>
     </div>`;
 
-  viewer.querySelector("[data-pdf-start]").addEventListener("click", () => startPdfPreview(pdfPath, viewer));
+  viewer.querySelector("[data-pdf-start]").addEventListener("click", () => startPdfPreview(pdfPath, viewer, id, startPage));
+
+  // Share link
+  const shareBtn = meta.querySelector("[data-share-link]");
+  if (shareBtn) {
+    shareBtn.addEventListener("click", () => {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        shareBtn.textContent = "已复制 ✓";
+        setTimeout(() => { shareBtn.textContent = "复制链接"; }, 2000);
+      }).catch(() => {});
+    });
+  }
 }
 
-async function startPdfPreview(pdfPath, viewer) {
+async function startPdfPreview(pdfPath, viewer, resourceId, startPage) {
   viewer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>正在加载 PDF.js 渲染引擎…</p></div>`;
 
   try {
@@ -87,7 +106,7 @@ async function startPdfPreview(pdfPath, viewer) {
     const loadingTask = pdfjsLib.getDocument(pdfPath);
     pdfDoc = await loadingTask.promise;
     totalPages = pdfDoc.numPages;
-    currentPage = 1;
+    currentPage = Math.min(startPage || 1, totalPages);
 
     viewer.innerHTML = `
       <div class="pdf-toolbar">
@@ -99,16 +118,32 @@ async function startPdfPreview(pdfPath, viewer) {
         <div style="display:flex;gap:4px;">
           <button type="button" data-pdf-zoom-out aria-label="缩小">−</button>
           <button type="button" data-pdf-zoom-in aria-label="放大">+</button>
+          <button type="button" data-pdf-invert aria-label="反色" title="暗色反色">◐</button>
         </div>
       </div>
       <div class="pdf-canvas-container" data-pdf-canvas-container></div>`;
 
-    viewer.querySelector("[data-pdf-prev]").addEventListener("click", () => { if (currentPage > 1) { currentPage--; renderPage(); } });
-    viewer.querySelector("[data-pdf-next]").addEventListener("click", () => { if (currentPage < totalPages) { currentPage++; renderPage(); } });
-    viewer.querySelector("[data-pdf-zoom-in]").addEventListener("click", () => { currentScale = Math.min(currentScale + 0.25, 3); renderPage(); });
-    viewer.querySelector("[data-pdf-zoom-out]").addEventListener("click", () => { currentScale = Math.max(currentScale - 0.25, 0.5); renderPage(); });
+    viewer.querySelector("[data-pdf-prev]").addEventListener("click", () => { if (currentPage > 1) { currentPage--; renderPage(resourceId); } });
+    viewer.querySelector("[data-pdf-next]").addEventListener("click", () => { if (currentPage < totalPages) { currentPage++; renderPage(resourceId); } });
+    viewer.querySelector("[data-pdf-zoom-in]").addEventListener("click", () => { currentScale = Math.min(currentScale + 0.25, 3); renderPage(resourceId); });
+    viewer.querySelector("[data-pdf-zoom-out]").addEventListener("click", () => { currentScale = Math.max(currentScale - 0.25, 0.5); renderPage(resourceId); });
+    viewer.querySelector("[data-pdf-invert]").addEventListener("click", () => {
+      isInverted = !isInverted;
+      const container = viewer.querySelector("[data-pdf-canvas-container]");
+      if (container) container.classList.toggle("invert", isInverted);
+    });
 
-    await renderPage();
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        if (currentPage > 1) { currentPage--; renderPage(resourceId); e.preventDefault(); }
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        if (currentPage < totalPages) { currentPage++; renderPage(resourceId); e.preventDefault(); }
+      }
+    });
+
+    await renderPage(resourceId);
   } catch (err) {
     console.error("PDF preview error:", err);
     viewer.innerHTML = `
@@ -123,7 +158,7 @@ async function startPdfPreview(pdfPath, viewer) {
   }
 }
 
-async function renderPage() {
+async function renderPage(resourceId) {
   if (isRendering) { pendingPage = currentPage; return; }
   isRendering = true;
 
@@ -149,12 +184,17 @@ async function renderPage() {
     container.innerHTML = "";
     container.appendChild(canvas);
     await page.render({ canvasContext: context, viewport }).promise;
+
+    // Save reading progress
+    if (resourceId) {
+      localStorage.setItem(STORAGE_KEYS.readingProgress, JSON.stringify({ id: resourceId, page: currentPage, ts: Date.now() }));
+    }
   } catch (err) {
     console.error("Page render error:", err);
   } finally {
     isRendering = false;
     if (pendingPage !== null) {
-      const p = pendingPage; pendingPage = null; currentPage = p; renderPage();
+      const p = pendingPage; pendingPage = null; currentPage = p; renderPage(resourceId);
     }
   }
 }
@@ -173,24 +213,13 @@ async function loadPdfjs() {
   throw new Error("All PDF.js CDN sources failed to load");
 }
 
-/* ---- Path helpers (repo-name agnostic) ---- */
-
-/**
- * Convert JSON "file" path to a URL usable from pages/resource.html.
- * Input:  "pdf/xxx.pdf"  or  "/yenrik-exam-rescue/pdf/xxx.pdf" (legacy)
- * Output: "../pdf/xxx.pdf"
- */
+/* ---- Path helpers ---- */
 function resolvePdfPath(file) {
   if (!file) return "#";
   if (/^https?:\/\//.test(file)) return file;
   return "../" + cleanSitePath(file);
 }
 
-/**
- * Convert JSON "page" path to a URL usable from pages/resource.html.
- * Input:  "pages/advanced-math.html"  or  "/yenrik-exam-rescue/pages/..." (legacy)
- * Output: "./advanced-math.html"
- */
 function resolvePagePath(page) {
   if (!page) return "../index.html";
   if (/^https?:\/\//.test(page)) return page;
@@ -199,11 +228,6 @@ function resolvePagePath(page) {
   return "../" + cleaned;
 }
 
-/**
- * Strip leading slashes and any repo-name prefix.
- * "pdf/xxx.pdf" → "pdf/xxx.pdf"
- * "/yenrik-exam-rescue/pdf/xxx.pdf" → "pdf/xxx.pdf"
- */
 function cleanSitePath(file) {
   if (!file) return "";
   let p = file.replace(/^\/+/, "");
