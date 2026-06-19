@@ -19,7 +19,7 @@ const DATA_PATHS = {
   subjects: `${BASE_PATH}data/subjects.json`,
   resources: `${BASE_PATH}data/resources.json`,
 };
-const MODAL_VERSION = "2026-06-19-v1";
+const MODAL_VERSION = "2026-06-20-v1";
 
 /* ---- Init ---- */
 document.addEventListener("DOMContentLoaded", async () => {
@@ -119,27 +119,120 @@ function showEntryModal(subjects, resources) {
   backdrop.innerHTML = `
     <div class="modal" role="dialog" aria-modal="true" aria-label="欢迎">
       <img class="modal-logo" src="${BASE_PATH}assets/logos/exam-rescue.svg" alt="">
-      <h2>欢迎来到 yenrik-exam-rescue</h2>
-      <p class="modal-desc">2025-2026 第二学期期末复习材料，支持在线预览与下载。</p>
-      <div class="modal-updates">
-        ${recent.map((r) => {
-    const subj = subjectMap.get(r.subject);
-    return `
-          <div class="modal-update-item">
-            <span class="update-icon">${subj?.icon || "📄"}</span>
-            <div class="update-info">
-              <strong>${escapeHtml(r.title)}</strong>
-              <time>${escapeHtml(r.updated)}</time>
-            </div>
-          </div>`;
-  }).join("")}
+
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="welcome">欢迎</button>
+        <button class="modal-tab" data-tab="updates">更新日志</button>
+        <button class="modal-tab" data-tab="disclaimer">免责声明</button>
       </div>
-      <div class="modal-disclaimer">所有资料仅供学习参考，请以教师要求为准。</div>
+
+      <div class="modal-panels">
+        <div class="modal-panel active" data-panel="welcome">
+          <h2>欢迎来到 yenrik-exam-rescue</h2>
+          <p class="modal-desc">2025–2026 第二学期期末复习材料，支持在线预览与下载。</p>
+          <div class="modal-recent-label">最近更新</div>
+          <div class="modal-updates">
+            ${recent.map((r) => {
+              const subj = subjectMap.get(r.subject);
+              return `
+                <div class="modal-update-item">
+                  <span class="update-icon">${subj?.icon || "📄"}</span>
+                  <div class="update-info">
+                    <strong>${escapeHtml(r.title)}</strong>
+                    <time>${escapeHtml(r.updated)}</time>
+                  </div>
+                </div>`;
+            }).join("")}
+          </div>
+        </div>
+
+        <div class="modal-panel" data-panel="updates">
+          <h2>更新日志</h2>
+          <div class="changelog">
+            <div class="changelog-section">
+              <h3>修 Bug</h3>
+              <ul>
+                <li>线性代数资料标题之前错写成"高等数学"，改过来了</li>
+                <li>描述里有个多余的"有"字，删掉了</li>
+                <li>"马克思基本主义原理"改成正确的"马克思主义基本原理"</li>
+                <li>之前 8 条资料里有两条 id 重复了，现在每条都有唯一 id</li>
+                <li>描述里的 <code>/n</code> 换行符字面量清掉了，现在显示正常</li>
+                <li>每条资料的描述都重新写了，现在能看出区别</li>
+              </ul>
+            </div>
+            <div class="changelog-section">
+              <h3>功能修复</h3>
+              <ul>
+                <li>PDF 预览现在有两个 CDN 可以切换，第一个挂了会自动用第二个，再不行就给你下载链接</li>
+                <li>第一次打开网站，现在会自动跟随你系统的亮色/暗色模式</li>
+                <li>导航菜单的按钮加了无障碍标签，主题切换按钮移到了更合理的位置</li>
+                <li>每个页面都加了手机顶栏颜色，现在打开网站手机顶栏会跟网站配色一致</li>
+                <li>PDF 预览侧栏的两个按钮功能分开了："新窗口打开"和"下载 PDF"是两件不同的事</li>
+                <li>如果打开一个不存在的资料链接，现在会显示友好提示，不会再白屏</li>
+              </ul>
+            </div>
+            <div class="changelog-section">
+              <h3>内容优化</h3>
+              <ul>
+                <li>导航栏现在全是中文：首页 / 关于 / 鸣谢 / 支持</li>
+                <li>鸣谢页面重新整理了，分成"技术与工具"和"开发设备"两类，把 AMD 删掉了</li>
+                <li>支持页面的二维码区域做了占位，替换说明写在 HTML 注释里了</li>
+                <li>品牌名保持 <strong>yenrik-exam-rescue</strong> 不变</li>
+                <li>页脚加了 © 2026 版权信息</li>
+              </ul>
+            </div>
+            <div class="changelog-section">
+              <h3>设计重做</h3>
+              <ul>
+                <li>配色从普通蓝色改成靛蓝色，更有高级感，logo 也同步更新了</li>
+                <li>首页顶部新增了渐变标题、标签和统计栏（4 门课 / 8+ 份资料 / 免费开放）</li>
+                <li>课程卡片现在鼠标悬停会往上浮，还能看到资料数量和最近更新日期</li>
+                <li>资料卡片加了标签：绿色"带答案" / 橙色"空白"，一眼就能区分</li>
+                <li>顶部导航栏现在是毛玻璃效果，滚动时一直贴在顶部</li>
+                <li>暗色模式全新配色，深色底，支持跟随系统 + 手动切换</li>
+                <li>整体排版重新做了：统一了间距、字号层级，优化了字母间距</li>
+                <li>手机端按钮现在最小 44px 高，更好点</li>
+              </ul>
+            </div>
+            <div class="changelog-section">
+              <h3>资料勘误</h3>
+              <ul>
+                <li>高等数学：更新了二重积分部分的解答过程，修正了最后一题的题目及答案错误</li>
+                <li>以后发现其他错误也会及时勘误，谢谢</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-panel" data-panel="disclaimer">
+          <h2>免责声明</h2>
+          <div class="disclaimer-text">
+            <p>本网站所有资料均为个人整理，<strong>仅供学习参考</strong>，不构成任何考试保证。</p>
+            <p>请务必以任课教师发布的<strong>官方材料</strong>为准，本网站资料仅供参考。</p>
+            <p>如发现资料内容有错漏，欢迎通过"支持"页面联系我，我会及时勘误。</p>
+            <p>本站<strong>不承担</strong>任何因使用本网站资料所产生的直接或间接后果。</p>
+            <p>资料仅供个人学习使用，请勿用于商业用途。</p>
+          </div>
+        </div>
+      </div>
+
       <button class="button primary" type="button" data-modal-close>进入站点</button>
     </div>`;
 
   document.body.appendChild(backdrop);
   requestAnimationFrame(() => backdrop.classList.add("active"));
+
+  // Tab switching
+  backdrop.querySelectorAll(".modal-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.tab;
+      backdrop.querySelectorAll(".modal-tab").forEach((t) => t.classList.remove("active"));
+      backdrop.querySelectorAll(".modal-panel").forEach((p) => p.classList.remove("active"));
+      tab.classList.add("active");
+      backdrop.querySelector(`.modal-panel[data-panel="${target}"]`).classList.add("active");
+    });
+  });
+
   backdrop.querySelector("[data-modal-close]").addEventListener("click", () => closeModal(backdrop));
   backdrop.addEventListener("click", (e) => { if (e.target === backdrop) closeModal(backdrop); });
 }
