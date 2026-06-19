@@ -1,0 +1,8 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Exam Rescue logo">
+  <rect width="192" height="192" rx="44" fill="#4f46e5"/>
+  <rect x="44" y="42" width="104" height="118" rx="22" fill="white"/>
+  <path d="M66 78H126" stroke="#4f46e5" stroke-width="10" stroke-linecap="round"/>
+  <path d="M66 104H118" stroke="#16a34a" stroke-width="10" stroke-linecap="round"/>
+  <path d="M66 130H102" stroke="#d97706" stroke-width="10" stroke-linecap="round"/>
+  <path d="M122 36L144 58L122 80" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
