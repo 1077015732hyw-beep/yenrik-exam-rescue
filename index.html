@@ -3,35 +3,35 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="期末复习材料，支持在线预览与下载。雁塔提名（Yanta Archive）。">
-    <meta name="theme-color" content="#0d7377" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0c0a09" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="雁塔提名的小岛资料馆——期末复习材料，支持在线预览与下载。">
+    <meta name="theme-color" content="#19c8b9" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a1612" media="(prefers-color-scheme: dark)">
     <meta name="robots" content="noindex,nofollow">
-
-    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="期末复习材料 | 雁塔提名">
-    <meta property="og:description" content="大学期末复习材料，支持在线预览与下载。">
+    <meta property="og:description" content="小岛上的期末复习资料馆，支持在线预览与下载。">
     <meta property="og:image" content="./assets/logos/exam-rescue.svg">
     <meta property="og:locale" content="zh_CN">
-
     <title>期末复习材料 | 雁塔提名</title>
     <link rel="icon" href="./assets/logos/exam-rescue.svg" type="image/svg+xml">
     <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./assets/logos/exam-rescue.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
   </head>
   <body data-page="home">
     <header class="site-header">
       <a class="brand" href="./index.html">
-        <img src="./assets/logos/exam-rescue.svg" alt="" width="26" height="26">
+        <img src="./assets/logos/exam-rescue.svg" alt="" width="28" height="28">
         <span>雁塔提名</span>
         <span class="brand-sub">Yanta Archive</span>
       </a>
       <button class="nav-toggle" type="button" aria-label="打开导航" aria-expanded="false" data-nav-toggle>☰</button>
       <nav class="site-nav" aria-label="主导航">
-        <a href="./pages/exam-rescue.html">Exam Rescue</a>
-        <a href="./pages/about.html">关于</a>
+        <a href="./pages/exam-rescue.html">资料馆</a>
+        <a href="./pages/about.html">关于小岛</a>
         <a href="./pages/acknowledgements.html">鸣谢</a>
         <button class="icon-button" type="button" aria-label="切换深色模式" title="切换深色模式" data-theme-toggle>◐</button>
       </nav>
@@ -39,46 +39,49 @@
 
     <main>
       <section class="hero container-wide">
-        <span class="hero-eyebrow">📚 Exam Rescue</span>
-        <h1>期末复习材料</h1>
-        <p class="hero-desc">大学期末复习资料，支持在线预览与下载。所有资料依据课堂重点整理，仅供学习参考。</p>
+        <span class="hero-eyebrow">2025-2026 学年第二学期</span>
+        <div class="ribbon">
+          <span class="ribbon-back-left"></span>
+          <span class="ribbon-back-right"></span>
+          <span class="ribbon-fold-left"></span>
+          <span class="ribbon-fold-right"></span>
+          <span class="ribbon-front"></span>
+          <span class="ribbon-text">期末复习材料</span>
+        </div>
+        <p class="hero-desc">欢迎来到小岛资料馆！这里收藏着整理好的复习材料，支持在线翻阅和下载带回。所有资料依据课堂重点整理，仅供学习参考哦。</p>
       </section>
 
       <div class="container-wide">
-        <div class="stats-bar" data-stats>
-          <div class="stat-item"><strong>—</strong><span>份资料</span></div>
-          <div class="stat-item"><strong>—</strong><span>门科目</span></div>
-          <div class="stat-item"><strong>—</strong><span>次更新</span></div>
+        <div class="stats-card" data-stats>
+          <div class="stat-item"><span class="stat-icon">📄</span><span class="stat-num">—</span><span class="stat-label">份资料</span></div>
+          <div class="stat-item"><span class="stat-icon">📚</span><span class="stat-num">—</span><span class="stat-label">门科目</span></div>
+          <div class="stat-item"><span class="stat-icon">🔄</span><span class="stat-num">—</span><span class="stat-label">次更新</span></div>
         </div>
       </div>
 
       <div class="container-wide">
-        <!-- Continue Reading -->
         <section class="section-block" data-continue-reading></section>
-
-        <!-- Recent -->
         <section class="section-block" data-recent></section>
 
-        <!-- Exam Rescue -->
         <section class="section-block">
           <div class="section-header">
             <h2>选择科目</h2>
             <a class="section-link" href="./pages/exam-rescue.html">查看全部 →</a>
           </div>
           <div class="course-grid">
-            <a class="course-card" href="./pages/advanced-math.html">
+            <a class="course-card teal" href="./pages/advanced-math.html">
               <span class="course-icon">📐</span>
               <strong>高等数学</strong>
               <span class="course-desc">依据课堂重点整理</span>
               <div class="course-meta"></div>
             </a>
-            <a class="course-card" href="./pages/linear-algebra.html">
+            <a class="course-card pink" href="./pages/linear-algebra.html">
               <span class="course-icon">📊</span>
               <strong>线性代数</strong>
               <span class="course-desc">围绕矩阵、行列式与线性方程组整理</span>
               <div class="course-meta"></div>
             </a>
-            <a class="course-card" href="./pages/marxism.html">
+            <a class="course-card yellow" href="./pages/marxism.html">
               <span class="course-icon">📝</span>
               <strong>马克思主义基本原理</strong>
               <span class="course-desc">依据课堂讲授重点与笔记整理</span>
@@ -89,26 +92,15 @@
       </div>
     </main>
 
-<footer class="site-footer">
-  <div style="max-width:700px;margin:0 auto 1rem;font-size:.9rem;line-height:1.8;opacity:.75;text-align:center;">
-    <strong>🌿 小小约定</strong>
-    <p>
-      本站原本仅用于身边同学学习交流，资料均由个人根据课堂内容、自主学习与课程重点整理制作。
-    </p>
-    <p>
-      欢迎学习交流，请勿大规模传播、搬运或转载至公开平台。如传播范围超出预期，本站可能停止维护或关闭访问。
-    </p>
-  </div>
-  <nav class="footer-nav" aria-label="页脚导航">
-    <a href="./pages/exam-rescue.html">Exam Rescue</a>
-    <a href="./pages/about.html">关于</a>
-    <a href="./pages/acknowledgements.html">鸣谢</a>
-    <span class="footer-copy">
-      © 2026 雁塔提名 · Yanta Archive
-    </span>
-  </nav>
-</footer>
+    <footer class="site-footer">
+      <nav class="footer-nav" aria-label="页脚导航">
+        <a href="./pages/exam-rescue.html">资料馆</a>
+        <a href="./pages/about.html">关于小岛</a>
+        <a href="./pages/acknowledgements.html">鸣谢</a>
+        <span class="footer-copy">© 2026 雁塔提名 · Yanta Archive</span>
+      </nav>
+    </footer>
 
-<script type="module" src="./js/app.js"></script>
-</body>
+    <script type="module" src="./js/app.js"></script>
+  </body>
 </html>

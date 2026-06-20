@@ -22,7 +22,7 @@ const DATA_PATHS = {
   resources: `${BASE_PATH}data/resources.json`,
   updates: `${BASE_PATH}data/updates.json`,
 };
-const MODAL_VERSION = "2026-06-20-v3";
+const MODAL_VERSION = "2026-06-20-v4";
 const STORAGE_KEYS = {
   theme: "ya-theme",
   modalVersion: "ya-modal-version",
@@ -165,7 +165,7 @@ function renderContinueReading(subjects, resources) {
       <span class="continue-icon">${subject?.icon || "📖"}</span>
       <div class="continue-info">
         <strong>${escapeHtml(resource.title)}</strong>
-        <span>上次阅读：第 ${progress.page || 1} 页</span>
+        <span>上次翻到：第 ${progress.page || 1} 页</span>
       </div>
       <span class="button small primary">继续</span>
     </a>`;
@@ -222,7 +222,7 @@ function renderCourseResources(resources) {
     .sort((a, b) => b.updated.localeCompare(a.updated));
 
   if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty-state">暂无资料。</div>';
+    container.innerHTML = '<div class="empty-state">这个资料架还是空的。</div>';
     return;
   }
 
@@ -259,7 +259,7 @@ function renderCourseResources(resources) {
     } else {
       items = items.sort((a, b) => b.updated.localeCompare(a.updated));
     }
-    list.innerHTML = items.map((r) => renderResourceCard(r)).join("") || '<div class="empty-state">没有匹配的资料。</div>';
+    list.innerHTML = items.map((r) => renderResourceCard(r)).join("") || '<div class="empty-state">没有找到匹配的资料。</div>';
   }
 
   chips.forEach((chip) => {
@@ -287,8 +287,8 @@ function renderResourceCard(resource) {
         <time datetime="${escapeHtml(resource.updated)}">更新于 ${escapeHtml(resource.updated)}</time>
       </div>
       <div class="resource-actions">
-        <a class="button primary" href="${BASE_PATH}pages/resource.html?id=${encodeURIComponent(resource.id)}">在线查看</a>
-        <a class="button ghost" href="${BASE_PATH}${cleanSitePath(resource.file)}" download>下载</a>
+        <a class="button primary" href="${BASE_PATH}pages/resource.html?id=${encodeURIComponent(resource.id)}">在线翻阅</a>
+        <a class="button ghost" href="${BASE_PATH}${cleanSitePath(resource.file)}" download>下载带回</a>
       </div>
     </article>`;
 }
@@ -312,18 +312,18 @@ function renderBreadcrumb() {
   const pageType = document.body.dataset.page;
   const courseId = document.body.dataset.course;
 
-  let crumbs = [{ label: "首页", href: `${BASE_PATH}index.html` }];
+  let crumbs = [{ label: "小岛", href: `${BASE_PATH}index.html` }];
 
   if (pageType === "exam-rescue") {
-    crumbs.push({ label: "Exam Rescue", current: true });
+    crumbs.push({ label: "资料馆", current: true });
   } else if (pageType === "course") {
-    crumbs.push({ label: "Exam Rescue", href: `${BASE_PATH}pages/exam-rescue.html` });
+    crumbs.push({ label: "资料馆", href: `${BASE_PATH}pages/exam-rescue.html` });
     crumbs.push({ label: document.title.split("|")[0].trim(), current: true });
   } else if (pageType === "resource") {
-    crumbs.push({ label: "Exam Rescue", href: `${BASE_PATH}pages/exam-rescue.html` });
-    crumbs.push({ label: "资料查看", current: true });
+    crumbs.push({ label: "资料馆", href: `${BASE_PATH}pages/exam-rescue.html` });
+    crumbs.push({ label: "翻阅中", current: true });
   } else if (pageType === "about") {
-    crumbs.push({ label: "关于", current: true });
+    crumbs.push({ label: "关于小岛", current: true });
   } else if (pageType === "acknowledgements") {
     crumbs.push({ label: "鸣谢", current: true });
   } else if (pageType === "support") {
@@ -361,9 +361,9 @@ function showEntryModal(subjects, resources) {
 
       <div class="modal-panels">
         <div class="modal-panel active" data-panel="welcome">
-          <h2>雁塔提名 · Yanta Archive</h2>
-          <p class="modal-desc">期末复习资料库，支持在线预览与下载。</p>
-          <div class="modal-recent-label">最近更新</div>
+          <h2>欢迎来到小岛 🏝️</h2>
+          <p class="modal-desc">这里是雁塔提名的资料馆，收藏着整理好的复习材料。</p>
+          <div class="modal-recent-label">最近上架</div>
           <div class="modal-updates">
             ${recent.map((r) => {
     const subj = subjectMap.get(r.subject);
@@ -380,32 +380,32 @@ function showEntryModal(subjects, resources) {
         </div>
 
         <div class="modal-panel" data-panel="updates">
-          <h2>更新日志</h2>
+          <h2>小岛变迁记</h2>
           <div class="changelog">
             <div class="changelog-section">
-              <h3>站点重建</h3>
+              <h3>小岛重建</h3>
               <ul>
-                <li>从 exam-rescue 重启为「雁塔提名 Yanta Archive」</li>
-                <li>全新设计语言：克制的排版、暖色系底色、teal 主色调</li>
+                <li>小岛从 exam-rescue 重启为「雁塔提名 Yanta Archive」</li>
+                <li>全新风貌：动森风格设计、薄荷绿主色、羊皮纸底色</li>
               </ul>
             </div>
             <div class="changelog-section">
               <h3>新功能</h3>
               <ul>
-                <li>继续阅读：自动记住上次看到哪份资料、第几页</li>
+                <li>继续阅读：自动记住上次翻到哪份资料、第几页</li>
                 <li>最近浏览：首页显示最近打开过的资料</li>
                 <li>标签系统：资料支持「高频考点」「必背」「自测」等标签筛选</li>
                 <li>全站统计：首页显示资料数、科目数、更新次数</li>
-                <li>PWA 支持：可添加到手机桌面</li>
+                <li>PWA 支持：可添加到手机桌面，像 App 一样使用</li>
                 <li>自定义 404 页面</li>
                 <li>PDF 键盘翻页（← →）+ 暗色反色模式</li>
                 <li>面包屑导航、资料排序与标签筛选</li>
               </ul>
             </div>
             <div class="changelog-section">
-              <h3>修 Bug</h3>
+              <h3>修复</h3>
               <ul>
-                <li>修复 resources.json 格式问题，PDF 预览恢复正常</li>
+                <li>修复 resources.json 格式问题，PDF 翻阅恢复正常</li>
                 <li>线性代数标题错误、描述重复、id 冲突等全部修复</li>
                 <li>"马克思基本主义原理"改为"马克思主义基本原理"</li>
               </ul>
@@ -423,16 +423,17 @@ function showEntryModal(subjects, resources) {
         <div class="modal-panel" data-panel="disclaimer">
           <h2>免责声明</h2>
           <div class="disclaimer-text">
-            <p>本站所有资料均为个人整理，<strong>仅供学习参考</strong>，不构成任何考试保证。</p>
-            <p>请务必以任课教师发布的<strong>官方材料</strong>为准。</p>
-            <p>如发现资料内容有错漏，欢迎通过"关于"页面联系反馈，会及时勘误。</p>
-            <p>本站<strong>不承担</strong>任何因使用本站资料所产生的直接或间接后果。</p>
+            <p>岛上所有资料均为个人整理，<strong>仅供学习参考</strong>，不构成任何考试保证。</p>
+            <p>请务必以任课居民（教师）发布的<strong>官方材料</strong>为准。</p>
+            <p>如发现资料内容有错漏，欢迎通过"关于小岛"页面联系岛主反馈，会及时勘误。</p>
+            <p>本岛<strong>不承担</strong>任何因使用岛上资料所产生的直接或间接后果。</p>
             <p>资料仅供个人学习使用，请勿用于商业用途。</p>
+            <p><strong>请勿大范围传播</strong>。若传播范围超过预期，小岛可能会考虑停止维护甚至关闭。</p>
           </div>
         </div>
       </div>
 
-      <button class="button primary" type="button" data-modal-close>进入档案馆</button>
+      <button class="button primary" type="button" data-modal-close>登上小岛</button>
     </div>`;
 
   document.body.appendChild(backdrop);
@@ -481,7 +482,7 @@ function cleanSitePath(file) {
 
 function showLoadError() {
   document.querySelectorAll("[data-course-resources], [data-resource-meta], [data-pdf-viewer], [data-stats], [data-continue-reading], [data-recent]").forEach((target) => {
-    target.innerHTML = '<div class="empty-state">加载失败，请刷新页面重试。</div>';
+    target.innerHTML = '<div class="empty-state">加载失败，请刷新页面重试 🔄</div>';
   });
 }
 

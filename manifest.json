@@ -1,11 +1,11 @@
 {
-  "name": "期末复习材料 · 雁塔提名",
+  "name": "雁塔提名 · 小岛资料馆",
   "short_name": "雁塔提名",
-  "description": "大学期末复习资料库，支持在线预览与下载。",
+  "description": "小岛上的期末复习资料馆，支持在线翻阅与下载带回。",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#fafaf9",
-  "theme_color": "#0d7377",
+  "background_color": "#f8f8f0",
+  "theme_color": "#19c8b9",
   "icons": [
     {
       "src": "./assets/logos/exam-rescue.svg",

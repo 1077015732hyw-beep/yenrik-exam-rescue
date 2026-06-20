@@ -3,31 +3,35 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="关于雁塔提名——一个由大学生长期维护的知识整理、排版与分享平台。">
-    <meta name="theme-color" content="#0d7377" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0c0a09" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="关于雁塔提名小岛——一个由大学生长期维护的知识整理项目。">
+    <meta name="theme-color" content="#19c8b9" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a1612" media="(prefers-color-scheme: dark)">
     <meta name="robots" content="noindex,nofollow">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="关于 · 雁塔提名">
-    <meta property="og:description" content="一个由大学生长期维护的知识整理、排版与分享平台。">
+    <meta property="og:title" content="关于小岛 · 雁塔提名">
+    <meta property="og:description" content="一个由大学生长期维护的知识整理小岛。">
     <meta property="og:image" content="../assets/logos/exam-rescue.svg">
     <meta property="og:locale" content="zh_CN">
-    <title>关于 | 雁塔提名</title>
+    <title>关于小岛 | 雁塔提名</title>
     <link rel="icon" href="../assets/logos/exam-rescue.svg" type="image/svg+xml">
     <link rel="manifest" href="../manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
   </head>
   <body data-page="about">
     <header class="site-header">
       <a class="brand" href="../index.html">
-        <img src="../assets/logos/exam-rescue.svg" alt="" width="26" height="26">
+        <img src="../assets/logos/exam-rescue.svg" alt="" width="28" height="28">
         <span>雁塔提名</span>
         <span class="brand-sub">Yanta Archive</span>
       </a>
       <button class="nav-toggle" type="button" aria-label="打开导航" aria-expanded="false" data-nav-toggle>☰</button>
       <nav class="site-nav" aria-label="主导航">
-        <a href="./exam-rescue.html">Exam Rescue</a>
-        <a href="./about.html" class="active">关于</a>
+        <a href="./exam-rescue.html">资料馆</a>
+        <a href="./about.html" class="active">关于小岛</a>
+        <a href="./acknowledgements.html">鸣谢</a>
         <button class="icon-button" type="button" aria-label="切换深色模式" title="切换深色模式" data-theme-toggle>◐</button>
       </nav>
     </header>
@@ -35,28 +39,57 @@
     <main class="document-main">
       <div class="container-wide"><nav class="breadcrumb" data-breadcrumb></nav></div>
       <article class="document-page">
-        <h1>关于本站</h1>
-        <p>雁塔提名（Yanta Archive）是一个个人维护的知识整理项目，目前以 Exam Rescue（期末复习资料库）为主要内容。</p>
-        <p>所有资料依据课堂重点整理，支持在线预览与下载。</p>
+        <h1>关于这座小岛</h1>
+        <p>雁塔提名（Yanta Archive）是一座由大学生长期维护的知识小岛，目前以资料馆（期末复习资料库）为主要内容。</p>
+        <p>岛上的资料依据课堂重点整理，支持在线翻阅和下载带回。核心理念是：收集 → 提炼 → 排版 → 分享。</p>
 
         <h2>免责声明</h2>
-        <p>本站所有资料均为个人整理，仅供学习参考，不构成任何考试保证。请以任课教师发布的官方材料为准。如发现资料内容有错漏，欢迎联系反馈，会及时勘误。资料仅供个人学习使用，请勿用于商业用途。</p>
+        <p>岛上所有资料均为个人整理，仅供学习参考，不构成任何考试保证。请以任课居民（教师）发布的官方材料为准。如发现资料内容有错漏，欢迎联系反馈，会及时勘误。资料仅供个人学习使用，请勿用于商业用途。</p>
+        <p><strong>请勿大范围传播。</strong>若传播范围超过预期，小岛可能会考虑停止维护甚至关闭。</p>
 
         <h2>联系方式</h2>
-        <p>如发现资料错误、链接失效、内容侵权或其他问题，欢迎通过以下方式联系。</p>
+        <p>如发现资料错误、链接失效、内容侵权或其他问题，欢迎通过以下方式联系岛主。</p>
         <div class="contact-card">
           <p>📧 邮箱：<a href="mailto:hywbye123@163.com">hywbye123@163.com</a></p>
         </div>
 
         <h2>技术说明</h2>
-        <p>本站基于 GitHub Pages 部署，使用纯 HTML / CSS / JavaScript 构建，无后端。阅读进度、最近浏览等数据存储在浏览器 localStorage 中，不上传任何服务器。</p>
+        <p>本岛基于 GitHub Pages 部署，使用纯 HTML / CSS / JavaScript 构建，无后端。阅读进度、最近浏览等数据存储在浏览器本地，不上传任何服务器。</p>
+        <p>本站全由 <strong>Vibe Coding</strong> 制作——没有手写一行代码，全部通过自然语言对话生成。</p>
+
+        <h2>技术鸣谢</h2>
+        <p>小岛的建设离不开以下开源与闭源项目、工具和设备的支持。</p>
+
+        <h3>开源项目</h3>
+        <div class="ack-grid">
+          <div class="ack-card"><strong>PDF.js</strong><span>PDF 在线渲染引擎</span></div>
+          <div class="ack-card"><strong>animal-island-vue</strong><span>动森风格设计灵感参考</span></div>
+        </div>
+
+        <h3>闭源服务与工具</h3>
+        <div class="ack-grid">
+          <div class="ack-card"><strong>GitHub Pages</strong><span>小岛托管服务</span></div>
+          <div class="ack-card"><strong>Google Fonts</strong><span>Nunito + Noto Sans SC 字体</span></div>
+          <div class="ack-card"><strong>edueditor</strong><span>PDF 排版工具</span></div>
+          <div class="ack-card"><strong>WorkBuddy</strong><span>AI 辅助开发</span></div>
+          <div class="ack-card"><strong>智谱清言</strong><span>AI 辅助校对</span></div>
+          <div class="ack-card"><strong>OpenAI</strong><span>AI 辅助开发</span></div>
+        </div>
+
+        <h3>开发设备</h3>
+        <div class="ack-grid">
+          <div class="ack-card"><strong>Apple</strong><span>MacBook 开发设备</span></div>
+          <div class="ack-card"><strong>Microsoft</strong><span>Windows 测试环境</span></div>
+          <div class="ack-card"><strong>NVIDIA</strong><span>GPU 计算支持</span></div>
+          <div class="ack-card"><strong>Intel</strong><span>CPU 计算支持</span></div>
+        </div>
       </article>
     </main>
 
     <footer class="site-footer">
       <nav class="footer-nav" aria-label="页脚导航">
-        <a href="./exam-rescue.html">Exam Rescue</a>
-        <a href="./about.html">关于</a>
+        <a href="./exam-rescue.html">资料馆</a>
+        <a href="./about.html">关于小岛</a>
         <a href="./acknowledgements.html">鸣谢</a>
         <span class="footer-copy">© 2026 雁塔提名 · Yanta Archive</span>
       </nav>

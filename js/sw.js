@@ -1,5 +1,5 @@
 // sw.js — Service Worker for Yanta Archive
-const CACHE_NAME = "yanta-archive-v2";
+const CACHE_NAME = "yanta-archive-v3";
 const STATIC_ASSETS = [
   "./",
   "./index.html",

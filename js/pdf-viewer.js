@@ -39,13 +39,13 @@ export function initPdfViewer({ subjects, resources }) {
 
   if (!resource) {
     meta.innerHTML = `
-      <p class="back-link"><a href="../index.html">← 返回首页</a></p>
-      <h1>未找到资料</h1>
-      <p>没有找到这份资料，请从课程页面重新选择。</p>
+      <p class="back-link"><a href="../index.html">← 返回小岛</a></p>
+      <h1>资料不见了</h1>
+      <p>没有找到这份资料，请从资料馆重新选择。</p>
       <div class="viewer-actions">
-        <a class="button primary" href="../index.html">返回首页</a>
+        <a class="button primary" href="../index.html">返回小岛</a>
       </div>`;
-    viewer.innerHTML = '<div class="empty-state">请从课程页面重新选择资料。</div>';
+    viewer.innerHTML = '<div class="empty-state">请从资料馆重新选择资料。</div>';
     return;
   }
 
@@ -63,8 +63,8 @@ export function initPdfViewer({ subjects, resources }) {
     <time datetime="${escapeHtml(resource.updated)}">更新于 ${escapeHtml(resource.updated)}</time>
     ${(resource.tags || []).map((t) => `<span class="resource-tag label">${escapeHtml(t)}</span>`).join(" ")}
     <div class="viewer-actions">
-      <a class="button primary" href="${pdfPath}" target="_blank" rel="noopener">在新窗口打开</a>
-      <a class="button ghost" href="${pdfPath}" download>下载 PDF</a>
+      <a class="button primary" href="${pdfPath}" target="_blank" rel="noopener">新窗口打开</a>
+      <a class="button ghost" href="${pdfPath}" download>下载带回</a>
       <button class="button ghost" type="button" data-share-link>复制链接</button>
     </div>`;
 
@@ -74,10 +74,10 @@ export function initPdfViewer({ subjects, resources }) {
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
         <path d="M14 2v6h6"/>
       </svg>
-      <h3>在线预览</h3>
-      <p>点击下方按钮加载 PDF 预览，支持翻页、缩放和键盘操作。</p>
-      ${startPage > 1 ? `<p style="color:var(--primary);font-weight:600;">📖 上次阅读到第 ${startPage} 页</p>` : ""}
-      <button class="button primary" type="button" data-pdf-start>开始预览</button>
+      <h3>在线翻阅</h3>
+      <p>点击下方按钮开始翻阅，支持翻页、缩放和键盘操作。</p>
+      ${startPage > 1 ? `<p style="color:var(--primary);font-weight:600;">📖 上次翻到第 ${startPage} 页</p>` : ""}
+      <button class="button primary" type="button" data-pdf-start>开始翻阅</button>
     </div>`;
 
   viewer.querySelector("[data-pdf-start]").addEventListener("click", () => startPdfPreview(pdfPath, viewer, id, startPage));
@@ -96,12 +96,12 @@ export function initPdfViewer({ subjects, resources }) {
 }
 
 async function startPdfPreview(pdfPath, viewer, resourceId, startPage) {
-  viewer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>正在加载 PDF.js 渲染引擎…</p></div>`;
+  viewer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>正在准备翻阅引擎…</p></div>`;
 
   try {
     if (!pdfjsLib) pdfjsLib = await loadPdfjs();
 
-    viewer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>正在加载 PDF 文件…</p></div>`;
+    viewer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>正在取出资料…</p></div>`;
 
     const loadingTask = pdfjsLib.getDocument(pdfPath);
     pdfDoc = await loadingTask.promise;
@@ -151,9 +151,9 @@ async function startPdfPreview(pdfPath, viewer, resourceId, startPage) {
         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
         </svg>
-        <h3>预览不可用</h3>
-        <p>可能是网络问题导致渲染引擎加载失败，你可以直接下载 PDF 查看。</p>
-        <a class="button primary" href="${pdfPath}" download>下载 PDF</a>
+        <h3>翻阅不可用</h3>
+        <p>可能是网络问题导致引擎加载失败，你可以直接下载带回查看。</p>
+        <a class="button primary" href="${pdfPath}" download>下载带回</a>
       </div>`;
   }
 }
