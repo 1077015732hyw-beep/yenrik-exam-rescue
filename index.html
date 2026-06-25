@@ -1,106 +1,195 @@
-<hyw!doctype html>
+<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="雁塔提名的小岛资料馆——期末复习材料，支持在线预览与下载。">
-    <meta name="theme-color" content="#19c8b9" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#1a1612" media="(prefers-color-scheme: dark)">
+    <meta name="description" content="雁塔提名小岛暂休公告——下学期再见。">
+    <meta name="theme-color" content="#19c8b9">
     <meta name="robots" content="noindex,nofollow">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="期末复习材料 | 雁塔提名">
-    <meta property="og:description" content="小岛上的期末复习资料馆，支持在线预览与下载。">
-    <meta property="og:image" content="./assets/logos/exam-rescue.svg">
-    <meta property="og:locale" content="zh_CN">
-    <title>期末复习材料 | 雁塔提名</title>
+    <title>小岛暂休 | 雁塔提名</title>
     <link rel="icon" href="./assets/logos/exam-rescue.svg" type="image/svg+xml">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./assets/logos/exam-rescue.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style.css">
+    <style>
+      :root {
+        --primary: #19c8b9;
+        --primary-hover: #3dd4c6;
+        --primary-bg: #e6f9f6;
+        --text: #794f27;
+        --text-body: #725d42;
+        --text-muted: #8a7b66;
+        --bg: #f8f8f0;
+        --bg-content: rgb(247, 243, 223);
+        --border: #c4b89e;
+        --warning: #f5c31c;
+        --focus-yellow: #ffcc00;
+        --focus-yellow-d: #e0b800;
+        --shadow-btn: #bdaea0;
+        --r-sm: 12px;
+        --r-base: 18px;
+        --r-lg: 24px;
+        --r-xl: 32px;
+        --r-pill: 50px;
+        --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --transition: 0.25s var(--ease);
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--text-body);
+        font-family: Nunito, 'Noto Sans SC', -apple-system, sans-serif;
+        font-size: 15px; font-weight: 500; line-height: 1.7; letter-spacing: 0.01em;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        display: flex; flex-direction: column;
+      }
+      a { color: var(--primary); text-decoration: none; }
+      img { max-width: 100%; display: block; }
+      button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+      /* Header */
+      .site-header {
+        display: flex; align-items: center; justify-content: space-between;
+        height: 60px; padding: 0 24px;
+        background: color-mix(in srgb, var(--bg) 90%, transparent);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border-bottom: 2px solid var(--border);
+      }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 0.95rem; color: var(--text); letter-spacing: 0.02em; }
+      .brand img { width: 28px; height: 28px; border-radius: var(--r-sm); }
+      .brand-sub { font-size: 0.7rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; }
+      .site-nav { display: flex; align-items: center; gap: 2px; }
+      .site-nav a {
+        padding: 7px 14px; border-radius: var(--r-sm);
+        font-size: 0.82rem; font-weight: 600; color: var(--text-body); letter-spacing: 0.02em;
+        transition: all var(--transition); position: relative;
+      }
+      .site-nav a:hover { background: var(--bg-content); color: var(--text); }
+      .site-nav a.active { color: var(--primary); background: transparent; }
+      .site-nav a.active::after {
+        content: ''; position: absolute; left: 14px; right: 14px; bottom: 2px;
+        height: 2.5px; border-radius: 2px; background: var(--primary);
+      }
+
+      /* Main */
+      main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+      .notice-card {
+        max-width: 560px; width: 100%;
+        padding: 48px 40px 40px;
+        border: 2px solid var(--border); border-radius: var(--r-xl);
+        background:
+          radial-gradient(circle, rgba(196,184,158,0.12) 1.5px, transparent 1.5px) 0 0/28px 28px,
+          radial-gradient(circle, rgba(196,184,158,0.08) 1px, transparent 1px) 7px 7px/14px 14px,
+          var(--bg-content);
+        box-shadow: 0 12px 40px rgba(61,52,40,0.10);
+        text-align: center;
+      }
+
+      /* Ribbon */
+      .ribbon {
+        display: inline-flex; align-items: center; justify-content: center;
+        height: 2.8em; padding: 0 1.8em; position: relative;
+        font-weight: 800; line-height: 1; letter-spacing: 0.04em;
+        filter: drop-shadow(0 0.08em 0.12em rgba(0,0,0,0.06));
+        margin-bottom: 24px;
+      }
+      .ribbon-text { font-weight: 900; font-size: 1.5rem; padding-top: 0.11em; z-index: 4; position: relative; color: #fff; }
+      .ribbon-back-left, .ribbon-back-right { position: absolute; bottom: -0.4em; width: 1.7em; height: 1.7em; z-index: 1; }
+      .ribbon-back-left { left: 0; clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 30% 50%, 0% 0%); background: #40a880; }
+      .ribbon-back-right { right: 0; clip-path: polygon(0% 0%, 100% 0%, 70% 50%, 100% 100%, 0% 100%); background: #40a880; }
+      .ribbon-fold-left, .ribbon-fold-right { position: absolute; top: calc(100% - 0.04em); z-index: 2; width: 0; height: 0; }
+      .ribbon-fold-left { left: 0; border-style: solid; border-width: 0 0.95em 0.45em 0; border-color: transparent #186048 transparent transparent; }
+      .ribbon-fold-right { right: 0; border-style: solid; border-width: 0 0 0.45em 0.95em; border-color: transparent transparent transparent #186048; }
+      .ribbon-front { position: absolute; inset: 0 0 0.1em; z-index: 3; border-radius: 0.2em; background: #82d5bb; transform: perspective(11.5em) rotateX(3deg); box-shadow: inset 0 -0.06em 0 rgba(0,0,0,0.05); }
+
+      /* Content */
+      .notice-emoji { font-size: 3rem; margin-bottom: 16px; line-height: 1; }
+      .notice-card h1 { font-size: 1.3rem; font-weight: 800; color: var(--text); margin-bottom: 16px; letter-spacing: 0.02em; }
+      .notice-card p { color: var(--text-body); font-size: 0.92rem; margin-bottom: 14px; font-weight: 500; }
+      .notice-card p strong { color: var(--text); font-weight: 700; }
+      .notice-card p:last-of-type { margin-bottom: 0; }
+
+      .notice-divider {
+        height: 2px; margin: 24px 0;
+        background: repeating-linear-gradient(90deg, var(--border) 0 6px, transparent 6px 12px);
+      }
+
+      .notice-contact {
+        margin-top: 20px; padding: 16px 20px;
+        border: 2px solid var(--border); border-radius: var(--r-base);
+        background: var(--bg);
+        font-size: 0.85rem; color: var(--text-muted); font-weight: 600;
+      }
+      .notice-contact a { color: var(--primary); font-weight: 700; }
+
+      /* Footer */
+      .site-footer {
+        padding: 20px 24px; border-top: 2px solid var(--border);
+        text-align: center;
+      }
+      .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+
+      @media (max-width: 520px) {
+        .notice-card { padding: 32px 24px 28px; }
+        .ribbon-text { font-size: 1.2rem; }
+        .notice-emoji { font-size: 2.4rem; }
+        .notice-card h1 { font-size: 1.1rem; }
+      }
+    </style>
   </head>
-  <body data-page="home">
+  <body>
     <header class="site-header">
       <a class="brand" href="./index.html">
         <img src="./assets/logos/exam-rescue.svg" alt="" width="28" height="28">
         <span>雁塔提名</span>
         <span class="brand-sub">Yanta Archive</span>
       </a>
-      <button class="nav-toggle" type="button" aria-label="打开导航" aria-expanded="false" data-nav-toggle>☰</button>
-      <nav class="site-nav" aria-label="主导航">
-        <a href="./pages/exam-rescue.html">资料馆</a>
-        <a href="./pages/about.html">关于小岛</a>
-        <a href="./pages/acknowledgements.html">鸣谢</a>
-        <button class="icon-button" type="button" aria-label="切换深色模式" title="切换深色模式" data-theme-toggle>◐</button>
+      <nav class="site-nav">
+        <a href="./index.html" class="active">小岛</a>
       </nav>
     </header>
 
     <main>
-      <section class="hero container-wide">
-        <span class="hero-eyebrow">2025-2026 学年第二学期</span>
+      <div class="notice-card">
         <div class="ribbon">
           <span class="ribbon-back-left"></span>
           <span class="ribbon-back-right"></span>
           <span class="ribbon-fold-left"></span>
           <span class="ribbon-fold-right"></span>
           <span class="ribbon-front"></span>
-          <span class="ribbon-text">期末复习材料</span>
+          <span class="ribbon-text">小岛暂休</span>
         </div>
-        <p class="hero-desc">欢迎来到小岛资料馆！这里收藏着整理好的复习材料，支持在线翻阅和下载带回。所有资料依据课堂重点整理，仅供学习参考哦。</p>
-      </section>
 
-      <div class="container-wide">
-        <div class="stats-card" data-stats>
-          <div class="stat-item"><span class="stat-icon">📄</span><span class="stat-num">—</span><span class="stat-label">份资料</span></div>
-          <div class="stat-item"><span class="stat-icon">📚</span><span class="stat-num">—</span><span class="stat-label">门科目</span></div>
-          <div class="stat-item"><span class="stat-icon">🔄</span><span class="stat-num">—</span><span class="stat-label">次更新</span></div>
+        <div class="notice-emoji">🌴</div>
+
+        <h1>本学期考试已结束</h1>
+
+        <p>感谢大家这段时间光顾小岛资料馆！本学期的所有考试已经结束，<strong>复习资料已下架</strong>。</p>
+
+        <p>小岛现在进入暂休状态，岛主去充电啦 🔋</p>
+
+        <div class="notice-divider"></div>
+
+        <p><strong>📋 下次开放</strong></p>
+        <p>下学期考试前，小岛会重新开放，届时会带来新的复习资料。</p>
+
+        <p><strong>🎨 关于排版</strong></p>
+        <p>下次小岛出现的时候，<strong>可能会换一种全新的排版方式</strong>——也许是不同的视觉风格，也许是不同的内容组织形式。敬请期待。</p>
+
+        <div class="notice-divider"></div>
+
+        <p>如果你发现了资料中的错误，或者想提前预约下学期的资料，欢迎联系岛主。</p>
+
+        <div class="notice-contact">
+          📧 邮箱：<a href="mailto:hywbye123@163.com">hywbye123@163.com</a>
         </div>
-      </div>
-
-      <div class="container-wide">
-        <section class="section-block" data-continue-reading></section>
-        <section class="section-block" data-recent></section>
-
-        <section class="section-block">
-          <div class="section-header">
-            <h2>选择科目</h2>
-            <a class="section-link" href="./pages/exam-rescue.html">查看全部 →</a>
-          </div>
-          <div class="course-grid">
-            <a class="course-card teal" href="./pages/advanced-math.html">
-              <span class="course-icon">📐</span>
-              <strong>高等数学</strong>
-              <span class="course-desc">依据课堂重点整理</span>
-              <div class="course-meta"></div>
-            </a>
-            <a class="course-card pink" href="./pages/linear-algebra.html">
-              <span class="course-icon">📊</span>
-              <strong>线性代数</strong>
-              <span class="course-desc">围绕矩阵、行列式与线性方程组整理</span>
-              <div class="course-meta"></div>
-            </a>
-            <a class="course-card yellow" href="./pages/marxism.html">
-              <span class="course-icon">📝</span>
-              <strong>马克思主义基本原理</strong>
-              <span class="course-desc">依据课堂讲授重点与笔记整理</span>
-              <div class="course-meta"></div>
-            </a>
-          </div>
-        </section>
       </div>
     </main>
 
     <footer class="site-footer">
-      <nav class="footer-nav" aria-label="页脚导航">
-        <a href="./pages/exam-rescue.html">资料馆</a>
-        <a href="./pages/about.html">关于小岛</a>
-        <a href="./pages/acknowledgements.html">鸣谢</a>
-        <span class="footer-copy">© 2026 雁塔提名 · Yanta Archive</span>
-      </nav>
+      <span class="footer-copy">© 2026 雁塔提名 · Yanta Archive · 下学期再见</span>
     </footer>
-
-    <script type="module" src="./js/app.js"></script>
   </body>
 </html>
