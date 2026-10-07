@@ -1,195 +1,286 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="雁塔提名小岛暂休公告——下学期再见。">
-    <meta name="theme-color" content="#19c8b9">
-    <meta name="robots" content="noindex,nofollow">
-    <title>小岛暂休 | 雁塔提名</title>
-    <link rel="icon" href="./assets/logos/exam-rescue.svg" type="image/svg+xml">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        --primary: #19c8b9;
-        --primary-hover: #3dd4c6;
-        --primary-bg: #e6f9f6;
-        --text: #794f27;
-        --text-body: #725d42;
-        --text-muted: #8a7b66;
-        --bg: #f8f8f0;
-        --bg-content: rgb(247, 243, 223);
-        --border: #c4b89e;
-        --warning: #f5c31c;
-        --focus-yellow: #ffcc00;
-        --focus-yellow-d: #e0b800;
-        --shadow-btn: #bdaea0;
-        --r-sm: 12px;
-        --r-base: 18px;
-        --r-lg: 24px;
-        --r-xl: 32px;
-        --r-pill: 50px;
-        --ease: cubic-bezier(0.4, 0, 0.2, 1);
-        --transition: 0.25s var(--ease);
-      }
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>拾卷 · 个人学习资料数字图书馆</title>
+<meta name="description" content="个人学习资料的分类书架：按学科归档 PDF 讲义与笔记，支持在线阅读、检索与下载。">
+<meta name="theme-color" content="#f6f4ef">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="拾卷">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" as="fetch" href="data/files.json" crossorigin>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/library.css">
+</head>
+<body>
+<a class="skip-link" href="#library">跳到资料书架</a>
 
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body {
-        background: var(--bg);
-        color: var(--text-body);
-        font-family: Nunito, 'Noto Sans SC', -apple-system, sans-serif;
-        font-size: 15px; font-weight: 500; line-height: 1.7; letter-spacing: 0.01em;
-        -webkit-font-smoothing: antialiased;
-        min-height: 100vh;
-        display: flex; flex-direction: column;
-      }
-      a { color: var(--primary); text-decoration: none; }
-      img { max-width: 100%; display: block; }
-      button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+<!-- ============ 站点头部 ============ -->
+<header class="site-head">
+  <div class="wrap site-head__inner">
+    <a class="brand" href="./" aria-label="拾卷 · 个人学习资料数字图书馆 · 首页">
+      <span class="brand__mark">拾卷</span>
+      <span class="brand__latin">Study Archive</span>
+    </a>
+    <nav class="site-head__nav" aria-label="主导航">
+      <a href="#featured"><span class="nav-label nav-label--full">推荐资料</span><span class="nav-label nav-label--short">推荐</span></a>
+      <a href="#recent"><span class="nav-label nav-label--full">最近加入</span><span class="nav-label nav-label--short">最近</span></a>
+      <a href="#library"><span class="nav-label nav-label--full">全部书架</span><span class="nav-label nav-label--short">书架</span></a>
+      <a href="thanks.html">致谢</a>
+    </nav>
+  </div>
+</header>
 
-      /* Header */
-      .site-header {
-        display: flex; align-items: center; justify-content: space-between;
-        height: 60px; padding: 0 24px;
-        background: color-mix(in srgb, var(--bg) 90%, transparent);
-        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        border-bottom: 2px solid var(--border);
-      }
-      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 0.95rem; color: var(--text); letter-spacing: 0.02em; }
-      .brand img { width: 28px; height: 28px; border-radius: var(--r-sm); }
-      .brand-sub { font-size: 0.7rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; }
-      .site-nav { display: flex; align-items: center; gap: 2px; }
-      .site-nav a {
-        padding: 7px 14px; border-radius: var(--r-sm);
-        font-size: 0.82rem; font-weight: 600; color: var(--text-body); letter-spacing: 0.02em;
-        transition: all var(--transition); position: relative;
-      }
-      .site-nav a:hover { background: var(--bg-content); color: var(--text); }
-      .site-nav a.active { color: var(--primary); background: transparent; }
-      .site-nav a.active::after {
-        content: ''; position: absolute; left: 14px; right: 14px; bottom: 2px;
-        height: 2.5px; border-radius: 2px; background: var(--primary);
-      }
+<main id="main">
 
-      /* Main */
-      main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
-      .notice-card {
-        max-width: 560px; width: 100%;
-        padding: 48px 40px 40px;
-        border: 2px solid var(--border); border-radius: var(--r-xl);
-        background:
-          radial-gradient(circle, rgba(196,184,158,0.12) 1.5px, transparent 1.5px) 0 0/28px 28px,
-          radial-gradient(circle, rgba(196,184,158,0.08) 1px, transparent 1px) 7px 7px/14px 14px,
-          var(--bg-content);
-        box-shadow: 0 12px 40px rgba(61,52,40,0.10);
-        text-align: center;
-      }
+  <!-- 仅在 ES Module 未能执行时可见（例如直接双击打开 file:// 页面）；脚本正常启动后会移除 -->
+  <div class="boot-notice" data-boot-notice>
+    <strong>请通过静态服务器打开本站</strong>
+    <p>书架数据由 <code>data/files.json</code> 通过 <code>fetch</code> 读取，浏览器会拦截 <code>file://</code> 下的模块与请求。</p>
+    <p>在项目目录执行 <code>python3 -m http.server 8080</code>，然后访问 <code>http://localhost:8080/</code>；
+       也可以直接部署到 GitHub Pages、Cloudflare Pages 或 Vercel。</p>
+  </div>
 
-      /* Ribbon */
-      .ribbon {
-        display: inline-flex; align-items: center; justify-content: center;
-        height: 2.8em; padding: 0 1.8em; position: relative;
-        font-weight: 800; line-height: 1; letter-spacing: 0.04em;
-        filter: drop-shadow(0 0.08em 0.12em rgba(0,0,0,0.06));
-        margin-bottom: 24px;
-      }
-      .ribbon-text { font-weight: 900; font-size: 1.5rem; padding-top: 0.11em; z-index: 4; position: relative; color: #fff; }
-      .ribbon-back-left, .ribbon-back-right { position: absolute; bottom: -0.4em; width: 1.7em; height: 1.7em; z-index: 1; }
-      .ribbon-back-left { left: 0; clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 30% 50%, 0% 0%); background: #40a880; }
-      .ribbon-back-right { right: 0; clip-path: polygon(0% 0%, 100% 0%, 70% 50%, 100% 100%, 0% 100%); background: #40a880; }
-      .ribbon-fold-left, .ribbon-fold-right { position: absolute; top: calc(100% - 0.04em); z-index: 2; width: 0; height: 0; }
-      .ribbon-fold-left { left: 0; border-style: solid; border-width: 0 0.95em 0.45em 0; border-color: transparent #186048 transparent transparent; }
-      .ribbon-fold-right { right: 0; border-style: solid; border-width: 0 0 0.45em 0.95em; border-color: transparent transparent transparent #186048; }
-      .ribbon-front { position: absolute; inset: 0 0 0.1em; z-index: 3; border-radius: 0.2em; background: #82d5bb; transform: perspective(11.5em) rotateX(3deg); box-shadow: inset 0 -0.06em 0 rgba(0,0,0,0.05); }
+  <!-- ============ Hero：图书馆空间 ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <!-- 3D 舞台：仅承担视觉作用，移动端与 prefers-reduced-motion 下不呈现 -->
+    <div class="hero__stage" aria-hidden="true">
+      <div class="stage__inner" data-stage>
 
-      /* Content */
-      .notice-emoji { font-size: 3rem; margin-bottom: 16px; line-height: 1; }
-      .notice-card h1 { font-size: 1.3rem; font-weight: 800; color: var(--text); margin-bottom: 16px; letter-spacing: 0.02em; }
-      .notice-card p { color: var(--text-body); font-size: 0.92rem; margin-bottom: 14px; font-weight: 500; }
-      .notice-card p strong { color: var(--text); font-weight: 700; }
-      .notice-card p:last-of-type { margin-bottom: 0; }
-
-      .notice-divider {
-        height: 2px; margin: 24px 0;
-        background: repeating-linear-gradient(90deg, var(--border) 0 6px, transparent 6px 12px);
-      }
-
-      .notice-contact {
-        margin-top: 20px; padding: 16px 20px;
-        border: 2px solid var(--border); border-radius: var(--r-base);
-        background: var(--bg);
-        font-size: 0.85rem; color: var(--text-muted); font-weight: 600;
-      }
-      .notice-contact a { color: var(--primary); font-weight: 700; }
-
-      /* Footer */
-      .site-footer {
-        padding: 20px 24px; border-top: 2px solid var(--border);
-        text-align: center;
-      }
-      .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
-
-      @media (max-width: 520px) {
-        .notice-card { padding: 32px 24px 28px; }
-        .ribbon-text { font-size: 1.2rem; }
-        .notice-emoji { font-size: 2.4rem; }
-        .notice-card h1 { font-size: 1.1rem; }
-      }
-    </style>
-  </head>
-  <body>
-    <header class="site-header">
-      <a class="brand" href="./index.html">
-        <img src="./assets/logos/exam-rescue.svg" alt="" width="28" height="28">
-        <span>雁塔提名</span>
-        <span class="brand-sub">Yanta Archive</span>
-      </a>
-      <nav class="site-nav">
-        <a href="./index.html" class="active">小岛</a>
-      </nav>
-    </header>
-
-    <main>
-      <div class="notice-card">
-        <div class="ribbon">
-          <span class="ribbon-back-left"></span>
-          <span class="ribbon-back-right"></span>
-          <span class="ribbon-fold-left"></span>
-          <span class="ribbon-fold-right"></span>
-          <span class="ribbon-front"></span>
-          <span class="ribbon-text">小岛暂休</span>
+        <div class="obj obj--book" style="--x:5%;--y:13%;--depth:1.15;--o:.62;--rx:8deg;--ry:-24deg;--rz:-4deg;--w:126px;--h:176px;--dur-float:15s;--delay:-2s;--float-y:-13px">
+          <div class="obj__body">
+            <div class="book">
+              <span class="book__pages"></span>
+              <span class="book__cover">
+                <span class="book__label">Lecture 01</span>
+                <span class="book__title serif">普通生物学</span>
+                <span class="book__rule"></span>
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div class="notice-emoji">🌴</div>
+        <div class="obj" style="--x:83%;--y:56%;--depth:.7;--o:.42;--rx:6deg;--ry:26deg;--rz:5deg;--dur-float:18s;--delay:-6s">
+          <div class="obj__body">
+            <div class="book" style="--w:98px;--h:138px">
+              <span class="book__pages"></span>
+              <span class="book__cover">
+                <span class="book__label">Vol. 07</span>
+                <span class="book__rule"></span>
+              </span>
+            </div>
+          </div>
+        </div>
 
-        <h1>本学期考试已结束</h1>
+        <div class="obj" style="--x:77%;--y:11%;--depth:1.3;--o:.6;--rx:4deg;--ry:-16deg;--rz:3deg;--dur-float:13s;--delay:-4s">
+          <div class="obj__body">
+            <div class="file-card">
+              <span class="file-card__corner"></span>
+              <span class="file-card__tag">PDF</span>
+              <span class="file-card__lines"><i></i><i></i><i></i></span>
+            </div>
+          </div>
+        </div>
 
-        <p>感谢大家这段时间光顾小岛资料馆！本学期的所有考试已经结束，<strong>复习资料已下架</strong>。</p>
+        <div class="obj" style="--x:13%;--y:67%;--depth:.55;--o:.38;--rx:-3deg;--ry:18deg;--rz:-3deg;--dur-float:20s;--delay:-9s">
+          <div class="obj__body">
+            <div class="file-card" style="--w:84px;--h:106px">
+              <span class="file-card__corner"></span>
+              <span class="file-card__tag">PDF</span>
+              <span class="file-card__lines"><i></i><i></i><i></i></span>
+            </div>
+          </div>
+        </div>
 
-        <p>小岛现在进入暂休状态，岛主去充电啦 🔋</p>
+        <div class="obj" style="--x:2%;--y:36%;--depth:.9;--o:.4;--rx:18deg;--ry:32deg;--dur-float:22s;--delay:-3s">
+          <div class="obj__body">
+            <div class="cube" style="--s:56px">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
 
-        <div class="notice-divider"></div>
+        <div class="obj" style="--x:87%;--y:76%;--depth:1.05;--o:.38;--rx:68deg;--rz:-14deg;--dur-float:17s;--delay:-7s">
+          <div class="obj__body"><span class="ring" style="--s:132px"></span></div>
+        </div>
 
-        <p><strong>📋 下次开放</strong></p>
-        <p>下学期考试前，小岛会重新开放，届时会带来新的复习资料。</p>
+        <div class="obj" style="--x:64%;--y:83%;--depth:.45;--o:.5;--rx:56deg;--rz:-10deg;--dur-float:16s;--delay:-5s">
+          <div class="obj__body"><span class="sheet" style="--w:152px;--h:104px"></span></div>
+        </div>
 
-        <p><strong>🎨 关于排版</strong></p>
-        <p>下次小岛出现的时候，<strong>可能会换一种全新的排版方式</strong>——也许是不同的视觉风格，也许是不同的内容组织形式。敬请期待。</p>
+        <div class="obj" style="--x:1%;--y:7%;--depth:1.4;--o:.3;--rx:40deg;--rz:8deg;--dur-float:24s;--delay:-11s">
+          <div class="obj__body"><span class="dots" style="--w:120px;--h:84px"></span></div>
+        </div>
 
-        <div class="notice-divider"></div>
+        <div class="obj" style="--x:29%;--y:3%;--depth:1.2;--o:.28;--rx:62deg;--rz:20deg;--dur-float:19s;--delay:-1s">
+          <div class="obj__body"><span class="ring" style="--s:78px"></span></div>
+        </div>
 
-        <p>如果你发现了资料中的错误，或者想提前预约下学期的资料，欢迎联系岛主。</p>
+      </div>
+    </div>
 
-        <div class="notice-contact">
-          📧 邮箱：<a href="mailto:hywbye123@163.com">hywbye123@163.com</a>
+    <div class="hero__inner wrap">
+      <p class="eyebrow hero__eyebrow">Private Study Archive · 朋友们的资料馆</p>
+      <h1 class="hero__title serif" id="hero-title">
+        拾卷
+        <span class="hero__title-sub">Study Archive</span>
+      </h1>
+      <p class="hero__tagline">
+        馆长一个人上传，朋友们随便翻。<br>
+        不办借书证，不收押金，逾期也不罚款——只是考试不等人。
+      </p>
+
+      <div class="hero__search">
+        <form class="search" role="search" data-search-form>
+          <svg class="icon search__icon" aria-hidden="true"><use href="assets/icons.svg#i-search"></use></svg>
+          <label class="sr-only" for="q">搜索资料名称、学科或关键词</label>
+          <input class="search__input" id="q" type="search" name="q" placeholder="搜索馆藏：科目、资料名或关键词…"
+                 autocomplete="off" spellcheck="false" data-search-input>
+          <kbd class="search__key" aria-hidden="true">/</kbd>
+          <button class="search__clear" type="button" data-search-clear aria-label="清空搜索">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-close"></use></svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="hero__meta" data-hero-meta>
+        <span>馆藏 <b class="mono" data-stat-total>—</b> 册</span>
+        <i aria-hidden="true"></i>
+        <span>分类 <b class="mono" data-stat-cats>—</b> 个</span>
+        <i aria-hidden="true"></i>
+        <span>最近上架 <b class="mono" data-stat-updated>—</b></span>
+      </div>
+
+      <div class="hero__quick" data-quick-cats aria-label="常用分类"></div>
+    </div>
+
+    <a class="hero__scroll" href="#library" aria-hidden="true" tabindex="-1">Browse shelves</a>
+  </section>
+
+  <!-- ============ 推荐资料 ============ -->
+  <section class="section" id="featured" aria-labelledby="featured-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-head__titles">
+          <span class="eyebrow">Curated · 馆长推荐</span>
+          <h2 id="featured-title">推荐资料</h2>
+        </div>
+        <p class="section-head__note">馆长挑的。他觉得这几本最值得先看——你可以不同意，但建议先下载。</p>
+      </div>
+      <div class="featured" data-featured></div>
+    </div>
+  </section>
+
+  <!-- ============ 最近加入 ============ -->
+  <section class="section section--tight" id="recent" aria-labelledby="recent-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-head__titles">
+          <span class="eyebrow">New Arrivals · 入库记录</span>
+          <h2 id="recent-title">最近加入</h2>
+        </div>
+        <p class="section-head__note">刚上架的排最前面。更新频率取决于馆长最近有多心虚。</p>
+      </div>
+      <div class="ledger reveal" data-recent></div>
+    </div>
+  </section>
+
+  <!-- ============ 全部书架 ============ -->
+  <section class="section" id="library" aria-labelledby="library-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-head__titles">
+          <span class="eyebrow">All Materials · 全部馆藏</span>
+          <h2 id="library-title">全部书架</h2>
+        </div>
+        <p class="section-head__note">全部馆藏。点「预览」当场翻开，点「下载」直接带走，没人记录你的借阅历史。</p>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="wrap filters__inner">
+        <div class="filters__scroll" role="tablist" aria-label="按分类筛选资料" data-filters></div>
+        <div class="filters__tools">
+          <span class="filters__count" data-result-count aria-live="polite">—</span>
+          <label class="select">
+            <span class="sr-only">排序方式</span>
+            <select data-sort>
+              <option value="date-desc">最新入库</option>
+              <option value="date-asc">最早入库</option>
+              <option value="title-asc">名称 A→Z</option>
+              <option value="pages-desc">页数最多</option>
+              <option value="size-desc">文件最大</option>
+            </select>
+          </label>
         </div>
       </div>
-    </main>
+    </div>
 
-    <footer class="site-footer">
-      <span class="footer-copy">© 2026 雁塔提名 · Yanta Archive · 下学期再见</span>
-    </footer>
-  </body>
+    <div class="wrap">
+      <div class="shelf-grid" data-grid></div>
+      <div class="grid-empty" data-empty hidden>
+        <strong>书架上没有找到这份资料</strong>
+        <p data-empty-hint>换一个关键词，或回到「全部资料」重新浏览。</p>
+        <button class="btn" type="button" data-reset>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-refresh"></use></svg>
+          重置筛选
+        </button>
+      </div>
+      <p class="shelf-note" data-shelf-note></p>
+      <noscript>
+        <p class="shelf-note">资料列表由 <code>data/files.json</code> 动态加载。启用 JavaScript 后可在此浏览书架，
+        也可以直接访问 <a href="data/files.json">data/files.json</a> 查看文件索引。</p>
+      </noscript>
+    </div>
+  </section>
+  <!-- ============ 版权页入口 ============ -->
+  <section class="section section--tight" aria-labelledby="colophon-cta-title">
+    <div class="wrap">
+      <div class="colophon-cta reveal">
+        <div class="colophon-cta__text">
+          <p class="eyebrow">Colophon · 版权页</p>
+          <h2 id="colophon-cta-title" class="serif">这个网站没有作者</h2>
+          <p>全部代码、版式与文案由自然语言生成，作者一栏空着。想看看是谁（以及哪些奇怪的东西）被感谢了？</p>
+        </div>
+        <a class="btn btn--solid colophon-cta__btn" href="thanks.html">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-book"></use></svg>
+          阅读版权页与致谢
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 页脚 ============ -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="site-foot__shelves" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="site-foot__install">
+      <button class="btn btn--ghost" type="button" data-install-app hidden>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-install"></use></svg>
+        安装到主屏幕
+      </button>
+      <p class="site-foot__hint" data-install-hint hidden>
+        手机浏览器：iPhone 用 Safari、Android 用 Chrome 打开本站，
+        在「分享 / 菜单」里选择「添加到主屏幕」，之后就像 App 一样打开。
+      </p>
+    </div>
+    <div class="site-foot__inner">
+      <p>拾卷 · 朋友们的学习资料馆 — 馆长负责上传，其他人负责指出错别字。</p>
+      <p><a href="thanks.html">版权页与致谢</a> · PDF 预览由 PDF.js 按需加载</p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/home.js"></script>
+<script type="module" src="js/pwa.js"></script>
+</body>
 </html>

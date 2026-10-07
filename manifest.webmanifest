@@ -1,0 +1,24 @@
+{
+  "name": "拾卷 · 朋友们的学习资料馆",
+  "short_name": "拾卷",
+  "description": "馆长上传、朋友翻阅的私人资料馆：分类书架、检索、在线阅读 PDF 与下载。",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6f4ef",
+  "theme_color": "#f6f4ef",
+  "categories": ["education", "books", "productivity"],
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "推荐资料", "short_name": "推荐", "url": "./index.html#featured" },
+    { "name": "最近加入", "short_name": "最近", "url": "./index.html#recent" },
+    { "name": "全部书架", "short_name": "书架", "url": "./index.html#library" }
+  ]
+}

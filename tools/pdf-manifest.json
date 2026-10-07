@@ -1,0 +1,105 @@
+{
+  "generatedAt": "2026-10-07T08:57:00.686Z",
+  "files": {
+    "./pdf/biology/general-biology.pdf": {
+      "id": "general-biology",
+      "pages": 9,
+      "bytes": 554985
+    },
+    "./pdf/biology/cell-biology.pdf": {
+      "id": "cell-biology",
+      "pages": 8,
+      "bytes": 560575
+    },
+    "./pdf/biology/genetics-molecular.pdf": {
+      "id": "genetics-molecular",
+      "pages": 8,
+      "bytes": 495281
+    },
+    "./pdf/biology/biochemistry-basics.pdf": {
+      "id": "biochemistry-basics",
+      "pages": 7,
+      "bytes": 428014
+    },
+    "./pdf/chemistry/organic-chemistry.pdf": {
+      "id": "organic-chemistry",
+      "pages": 9,
+      "bytes": 484668
+    },
+    "./pdf/chemistry/inorganic-chemistry.pdf": {
+      "id": "inorganic-chemistry",
+      "pages": 8,
+      "bytes": 532061
+    },
+    "./pdf/chemistry/physical-chemistry-thermo.pdf": {
+      "id": "physical-chemistry-thermo",
+      "pages": 7,
+      "bytes": 446495
+    },
+    "./pdf/chemistry/analytical-chemistry-lab.pdf": {
+      "id": "analytical-chemistry-lab",
+      "pages": 7,
+      "bytes": 511711
+    },
+    "./pdf/physics/university-physics-mechanics.pdf": {
+      "id": "university-physics-mechanics",
+      "pages": 9,
+      "bytes": 457944
+    },
+    "./pdf/physics/electromagnetism.pdf": {
+      "id": "electromagnetism",
+      "pages": 8,
+      "bytes": 471351
+    },
+    "./pdf/physics/optics-modern-physics.pdf": {
+      "id": "optics-modern-physics",
+      "pages": 7,
+      "bytes": 480007
+    },
+    "./pdf/mathematics/calculus.pdf": {
+      "id": "calculus",
+      "pages": 9,
+      "bytes": 426681
+    },
+    "./pdf/mathematics/linear-algebra.pdf": {
+      "id": "linear-algebra",
+      "pages": 7,
+      "bytes": 371875
+    },
+    "./pdf/mathematics/probability-statistics.pdf": {
+      "id": "probability-statistics",
+      "pages": 7,
+      "bytes": 373437
+    },
+    "./pdf/english/academic-english-writing.pdf": {
+      "id": "academic-english-writing",
+      "pages": 7,
+      "bytes": 449378
+    },
+    "./pdf/english/scientific-english-reading.pdf": {
+      "id": "scientific-english-reading",
+      "pages": 7,
+      "bytes": 472374
+    },
+    "./pdf/physics/physics-lab-reports.pdf": {
+      "id": "physics-lab-reports",
+      "pages": 7,
+      "bytes": 442648
+    },
+    "./pdf/other/course-syllabus.pdf": {
+      "id": "course-syllabus",
+      "pages": 6,
+      "bytes": 464682
+    },
+    "./pdf/other/literature-management.pdf": {
+      "id": "literature-management",
+      "pages": 7,
+      "bytes": 504764
+    },
+    "./pdf/other/study-notes-plan.pdf": {
+      "id": "study-notes-plan",
+      "pages": 7,
+      "bytes": 481747
+    }
+  }
+}

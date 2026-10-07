@@ -1,0 +1,183 @@
+/* ==========================================================================
+   thanks.css — 版权页与致谢（Colophon）
+   ========================================================================== */
+
+.thanks-hero {
+  padding-block: clamp(3rem, 11vh, 6rem) clamp(2rem, 5vw, 3rem);
+  max-width: 46rem;
+}
+.thanks-hero__title {
+  margin-top: 1.1rem;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+.thanks-hero__lead {
+  margin-top: 1.5rem;
+  font-size: clamp(0.938rem, 1.7vw, 1.06rem);
+  line-height: 2;
+  color: var(--ink-2);
+}
+
+.thanks-section { padding-block: clamp(1.5rem, 4vw, 2.5rem); }
+
+.thanks-h2 {
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.25rem;
+}
+.thanks-intro {
+  max-width: 52ch;
+  margin-top: -0.5rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.875rem;
+  line-height: 1.9;
+  color: var(--ink-3);
+}
+
+/* ---------- 郑重声明 ---------- */
+.statement {
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 2.25rem) clamp(1.35rem, 4vw, 2.25rem);
+  border: 1px dashed var(--line-2);
+  border-left: 4px solid var(--seal);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--paper-2), rgba(246, 244, 239, 0.6));
+  box-shadow: var(--shadow-1);
+}
+.statement__label {
+  font-size: 0.688rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--seal);
+  margin-bottom: 1rem;
+}
+.statement__text {
+  font-size: clamp(1.06rem, 2.6vw, 1.5rem);
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  text-indent: 0;
+}
+.statement__note {
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: var(--hair);
+  font-size: 0.813rem;
+  line-height: 1.9;
+  color: var(--ink-3);
+}
+
+/* ---------- 版权页（实体书的版权页排版） ---------- */
+.colophon {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  border-top: var(--hair);
+  border-left: var(--hair);
+}
+.colophon > div {
+  padding: 0.95rem 1.1rem;
+  border-right: var(--hair);
+  border-bottom: var(--hair);
+  background: var(--paper-2);
+}
+.colophon dt {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 0.35rem;
+}
+.colophon dd {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+.colophon__blank { color: var(--ink-4); font-style: italic; }
+
+/* ---------- 致谢名单 ---------- */
+.credits {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  gap: 1rem;
+}
+.credit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.15rem 1.25rem 1.25rem;
+  border: var(--hair);
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.credit:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-2);
+  box-shadow: var(--shadow-1);
+}
+.credit::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: var(--radius) 0 0 var(--radius);
+  background: var(--line-2);
+}
+.credit--lead::before { background: var(--seal); }
+.credit--you::before { background: var(--ink); }
+.credit__role {
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.credit__name {
+  font-size: 1.16rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.credit__text {
+  font-size: 0.813rem;
+  line-height: 1.85;
+  color: var(--ink-2);
+}
+
+/* ---------- 正经结语 ---------- */
+.thanks-serious {
+  max-width: 60ch;
+  padding: clamp(1.35rem, 3.5vw, 2rem);
+  border: var(--hair);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+}
+.thanks-serious p {
+  font-size: 0.875rem;
+  line-height: 2;
+  color: var(--ink-2);
+}
+.thanks-serious p + p { margin-top: 0.9rem; }
+.thanks-serious .thanks-h2 { margin-bottom: 1rem; }
+
+.thanks-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding-bottom: clamp(2rem, 6vw, 3rem);
+}
+
+/* ---------- 移动端 ---------- */
+@media (max-width: 860px) {
+  .colophon { grid-template-columns: minmax(0, 1fr); }
+  .credits { grid-template-columns: minmax(0, 1fr); }
+  .thanks-hero { padding-block: 2.5rem 1.5rem; }
+  .thanks-actions .btn { flex: 1 1 auto; }
+}

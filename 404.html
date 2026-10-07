@@ -1,45 +1,95 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="这页好像被风吹走了 — 雁塔提名">
-    <meta name="theme-color" content="#19c8b9" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#1a1612" media="(prefers-color-scheme: dark)">
-    <meta name="robots" content="noindex,nofollow">
-    <title>404 | 雁塔提名</title>
-    <link rel="icon" href="./assets/logos/exam-rescue.svg" type="image/svg+xml">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style.css">
-  </head>
-  <body>
-    <header class="site-header">
-      <a class="brand" href="./index.html">
-        <img src="./assets/logos/exam-rescue.svg" alt="" width="28" height="28">
-        <span>雁塔提名</span>
-        <span class="brand-sub">Yanta Archive</span>
-      </a>
-    </header>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>这一格书架是空的 · 拾卷</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/base.css">
+<style>
+  .lost {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 2rem 1.25rem;
+  }
+  .lost__mark {
+    font-family: var(--font-mono);
+    font-size: 0.688rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .lost h1 {
+    margin: 1.1rem 0 0.9rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .lost p {
+    max-width: 42ch;
+    margin: 0 auto 2rem;
+    color: var(--ink-2);
+    font-size: 0.938rem;
+    line-height: 1.9;
+  }
+  .lost__shelf {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 6px;
+    height: 74px;
+    margin-bottom: 2rem;
+  }
+  .lost__shelf i {
+    width: 12px;
+    border: 1px solid var(--line-2);
+    border-radius: 2px 2px 0 0;
+    background: linear-gradient(180deg, var(--paper-2), var(--paper-3));
+  }
+  .lost__shelf i:nth-child(1) { height: 100%; }
+  .lost__shelf i:nth-child(2) { height: 78%; }
+  .lost__shelf i:nth-child(3) { height: 92%; }
+  .lost__shelf i:nth-child(4) { height: 60%; opacity: .35; }
+  .lost__shelf i:nth-child(5) { height: 84%; }
+  .lost__actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<main class="lost">
+  <div>
+    <p class="lost__mark">404 · Shelf Not Found</p>
+    <h1>这一格书架是空的</h1>
+    <p>你要找的页面不在馆藏里。可能是链接过期，也可能是馆长手滑改了文件名——他没有恶意，只是手快。</p>
+    <div class="lost__shelf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="lost__actions">
+      <a class="btn btn--solid" href="index.html" data-root-link="index.html">回到资料馆</a>
+      <a class="btn" href="index.html#library" data-root-link="index.html#library">浏览全部书架</a>
+      <a class="btn btn--ghost" href="thanks.html" data-root-link="thanks.html">版权页与致谢</a>
+    </div>
+  </div>
+</main>
+<script>
+  /* 静态托管的 404 可能出现在任意深度的地址上（/repo/a/b/c），
+     相对链接会算错。这里用 manifest 反查站点根目录再把链接修正过来。 */
+  (async () => {
+    const segs = location.pathname.split('/').filter(Boolean);
+    for (let i = segs.length; i >= 0; i--) {
+      const base = '/' + segs.slice(0, i).join('/') + (i ? '/' : '');
+      try {
+        const res = await fetch(base + 'manifest.webmanifest', { method: 'HEAD' });
+        if (!res.ok) continue;
+        document.querySelectorAll('[data-root-link]').forEach((a) => {
+          a.setAttribute('href', base + a.dataset.rootLink);
+        });
+        return;
+      } catch { /* 继续往上一层试 */ }
+    }
+  })();
+</script>
 
-    <main>
-      <div class="container">
-        <div class="not-found">
-          <div class="nf-code">404</div>
-          <h1>这页好像被风吹走了 🍃</h1>
-          <p>你要找的页面不存在，可能已经被移动或删除了。</p>
-          <a class="button primary" href="./index.html">回到小岛</a>
-        </div>
-      </div>
-    </main>
-
-    <footer class="site-footer">
-      <nav class="footer-nav" aria-label="页脚导航">
-        <a href="./pages/exam-rescue.html">资料馆</a>
-        <a href="./pages/about.html">关于小岛</a>
-        <span class="footer-copy">© 2026 雁塔提名 · Yanta Archive</span>
-      </nav>
-    </footer>
-  </body>
+</body>
 </html>

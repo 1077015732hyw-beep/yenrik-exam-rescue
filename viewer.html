@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>阅读 · 拾卷 · 个人学习资料数字图书馆</title>
+<meta name="description" content="在线阅读学习资料 PDF：翻页、缩放、全屏与下载。">
+<meta name="theme-color" content="#f6f4ef">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="拾卷">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/viewer.css">
+</head>
+<body>
+<a class="skip-link" href="#reader">跳到阅读器</a>
+
+<!-- ============ 阅读页顶栏 ============ -->
+<header class="doc-bar">
+  <div class="wrap doc-bar__inner">
+    <a class="doc-bar__back" href="index.html#library">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-arrow-left"></use></svg>
+      返回书架
+    </a>
+    <span class="doc-bar__divider" aria-hidden="true"></span>
+    <h1 class="doc-bar__title" data-doc-title>正在载入资料…</h1>
+    <span class="doc-bar__cat" data-doc-cat hidden>
+      <i class="dot" data-doc-dot></i><span data-doc-cat-text></span>
+    </span>
+    <div class="doc-bar__actions">
+      <button class="tool panel-toggle" type="button" data-panel-toggle
+              aria-expanded="false" aria-controls="doc-panel-body" aria-label="查看资料信息">
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-info"></use></svg>
+        <span class="sr-only" data-panel-toggle-text>查看资料信息</span>
+      </button>
+      <button class="btn btn--ghost" type="button" data-copy-link>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-link"></use></svg>
+        <span data-copy-link-text>复制链接</span>
+      </button>
+      <a class="btn btn--ghost" href="#" data-doc-download download>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-download"></use></svg>
+        <span>下载 PDF</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="doc-grid" id="main">
+  <!-- 仅在 ES Module 未能执行时可见（例如直接双击打开 file:// 页面）；脚本正常启动后会移除 -->
+  <div class="boot-notice" data-boot-notice>
+    <strong>请通过静态服务器打开本站</strong>
+    <p>书架数据由 <code>data/files.json</code> 通过 <code>fetch</code> 读取，浏览器会拦截 <code>file://</code> 下的模块与请求。</p>
+    <p>在项目目录执行 <code>python3 -m http.server 8080</code>，然后访问 <code>http://localhost:8080/</code>；
+       也可以直接部署到 GitHub Pages、Cloudflare Pages 或 Vercel。</p>
+  </div>
+
+  <!-- ============ 左：资料信息 ============ -->
+  <aside class="doc-panel" data-panel aria-label="资料信息">
+    <div class="doc-panel__inner" id="doc-panel-body">
+      <div class="doc-cover" data-cover>
+        <span class="doc-cover__glyph">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-pdf"></use></svg>
+          Portable Document Format
+        </span>
+        <h1 data-cover-title>—</h1>
+        <p class="doc-cover__latin" data-cover-latin></p>
+        <p class="doc-cover__desc" data-cover-desc></p>
+      </div>
+
+      <div class="doc-panel__actions">
+        <a class="btn btn--seal btn--block" href="#" data-panel-download download>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-download"></use></svg>
+          下载 PDF
+        </a>
+        <button class="btn btn--block" type="button" data-read-now>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-eye"></use></svg>
+          在线阅读
+        </button>
+      </div>
+
+      <dl class="meta-table" data-meta></dl>
+
+      <div class="doc-panel__tags" data-tags></div>
+
+      <p class="doc-panel__hint">
+        PDF 仅在打开本页、且浏览器开始阅读时才加载，不会占用首页流量。
+        在线阅读需联网；若加载失败，可直接下载原文。
+      </p>
+
+      <div class="related" data-related hidden>
+        <h2>同分类资料</h2>
+        <div data-related-list></div>
+      </div>
+
+      <noscript>
+        <p class="doc-panel__hint">
+          阅读器需要 JavaScript。你仍然可以下载原文：
+          <a href="#" data-doc-download>下载 PDF</a>。若要看全部资料索引，请访问
+          <a href="data/files.json">data/files.json</a>。
+        </p>
+      </noscript>
+    </div>
+  </aside>
+
+  <!-- ============ 右：PDF 阅读器 ============ -->
+  <section class="reader" id="reader" data-reader aria-label="PDF 阅读器">
+    <div class="reader__bar" role="toolbar" aria-label="阅读工具栏">
+      <div class="reader__group">
+        <button class="tool" type="button" data-prev aria-label="上一页" disabled>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-chevron-left"></use></svg>
+        </button>
+        <span class="reader__page">
+          <label class="sr-only" for="page-input">当前页码</label>
+          <input id="page-input" type="text" inputmode="numeric" value="1" data-page-input disabled>
+          <span aria-hidden="true">/</span>
+          <span data-page-total>—</span>
+        </span>
+        <button class="tool" type="button" data-next aria-label="下一页" disabled>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-chevron-right"></use></svg>
+        </button>
+      </div>
+
+      <span class="reader__sep" aria-hidden="true"></span>
+
+      <div class="reader__group">
+        <button class="tool" type="button" data-zoom-out aria-label="缩小" disabled>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-minus"></use></svg>
+        </button>
+        <span class="reader__zoom-label" data-zoom-label>100%</span>
+        <button class="tool" type="button" data-zoom-in aria-label="放大" disabled>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-plus"></use></svg>
+        </button>
+        <button class="tool" type="button" data-fit aria-label="适应宽度" aria-pressed="true" disabled>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-fit"></use></svg>
+        </button>
+      </div>
+
+      <div class="reader__group reader__group--right">
+        <span class="reader__status" data-status>准备就绪</span>
+        <span class="reader__sep" aria-hidden="true"></span>
+        <a class="tool" href="#" data-download download aria-label="下载 PDF">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-download"></use></svg>
+        </a>
+        <button class="tool" type="button" data-fullscreen aria-label="全屏" disabled>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-expand"></use></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="reader__progress" data-progress aria-hidden="true"><i></i></div>
+
+    <div class="reader__hint" data-hint hidden></div>
+
+    <div class="reader__stage" data-stage>
+      <canvas data-canvas hidden></canvas>
+
+      <!-- 状态一：尚未开始 -->
+      <div class="reader__overlay reader__overlay--start" data-overlay-start>
+        <div class="reader__start">
+          <span class="eyebrow">On-demand Preview</span>
+          <h2>需要时再打开这本书</h2>
+          <p>为节省流量，PDF 不会自动加载。点击下方按钮开始在线阅读，或直接下载原文。</p>
+          <div class="overlay-actions">
+            <button class="btn btn--solid" type="button" data-read-now>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-eye"></use></svg>
+              在线阅读
+            </button>
+            <a class="btn btn--ghost" href="#" data-download download>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-download"></use></svg>
+              下载 PDF
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 状态二：加载中 -->
+      <div class="reader__overlay" data-overlay-loading hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <h2>正在从书架取书…</h2>
+        <p data-loading-hint>正在加载 PDF 阅读组件与文件。</p>
+      </div>
+
+      <!-- 状态三：加载失败 -->
+      <div class="reader__overlay reader__overlay--error" data-overlay-error hidden>
+        <span class="reader__overlay-icon" aria-hidden="true">
+          <svg class="icon"><use href="assets/icons.svg#i-alert"></use></svg>
+        </span>
+        <h2>暂时无法在线预览</h2>
+        <p data-error-hint>可能是网络不可用、文件路径有误，或该文件不支持在线渲染。</p>
+        <div class="overlay-actions">
+          <a class="btn btn--seal" href="#" data-download download>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-download"></use></svg>
+            下载 PDF
+          </a>
+          <button class="btn btn--ghost" type="button" data-retry>
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-refresh"></use></svg>
+            重新加载
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="js/viewer.js"></script>
+<script type="module" src="js/pwa.js"></script>
+</body>
+</html>

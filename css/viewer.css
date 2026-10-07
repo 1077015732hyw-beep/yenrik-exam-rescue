@@ -1,0 +1,577 @@
+/* ==========================================================================
+   viewer.css — 阅读页：左侧资料信息 + 右侧 PDF 阅读器
+   ========================================================================== */
+
+/* ---------- 1. 骨架 ---------- */
+.doc-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--glass);
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+  border-bottom: var(--hair);
+}
+.doc-bar__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 56px;
+}
+.doc-bar__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem 0.35rem 0.45rem;
+  border-radius: var(--radius-s);
+  font-size: 0.813rem;
+  color: var(--ink-2);
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.doc-bar__back:hover { background: rgba(23, 22, 26, 0.05); color: var(--ink); }
+.doc-bar__divider { width: 1px; height: 18px; background: var(--line-2); flex: none; }
+.doc-bar__title {
+  min-width: 0;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.doc-bar__cat {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.688rem;
+  color: var(--ink-3);
+}
+.doc-bar__actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; flex: none; }
+@media (max-width: 720px) {
+  .doc-bar__cat, .doc-bar__actions .btn span { display: none; }
+  .doc-bar__actions .btn { padding: 0.5rem 0.6rem; }
+}
+
+.doc-grid {
+  display: grid;
+  grid-template-columns: 336px minmax(0, 1fr);
+  align-items: stretch;
+}
+@media (min-width: 861px) {
+  .doc-grid { height: calc(100dvh - var(--docbar-h)); }
+}
+
+/* ---------- 2. 资料信息面板 ---------- */
+.doc-panel {
+  border-right: var(--hair);
+  background: linear-gradient(180deg, var(--paper-2), var(--paper));
+  overflow-x: clip;          /* 防止内部内容把整页撑宽 */
+}
+@media (min-width: 861px) {
+  .doc-panel { height: 100%; overflow-y: auto; }
+}
+.doc-panel__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.6rem 1.5rem 2.5rem;
+}
+
+/* 封面块 */
+.doc-cover {
+  position: relative;
+  padding: 1.4rem 1.3rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0)),
+    var(--tint, var(--paper-3));
+  box-shadow: 0 14px 30px -24px rgba(23, 22, 26, 0.6);
+  overflow: hidden;
+}
+.doc-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 8px;
+  background: linear-gradient(90deg, rgba(23, 22, 26, 0.14), rgba(23, 22, 26, 0.02));
+}
+.doc-cover[data-cat="生物学"]   { --tint: #eef0ea; }
+.doc-cover[data-cat="化学"]     { --tint: #f2eee6; }
+.doc-cover[data-cat="物理"]     { --tint: #eaedf0; }
+.doc-cover[data-cat="数学"]     { --tint: #efeaf1; }
+.doc-cover[data-cat="英语"]     { --tint: #f2eaea; }
+.doc-cover[data-cat="实验资料"] { --tint: #e9efed; }
+.doc-cover[data-cat="课程资料"] { --tint: #f0ede7; }
+.doc-cover[data-cat="其他"]     { --tint: #f0eee9; }
+.doc-cover__glyph {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: var(--seal);
+}
+.doc-cover__glyph .icon { width: 1rem; height: 1rem; }
+.doc-cover h1 {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+}
+.doc-cover__latin {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.doc-cover__desc {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(23, 22, 26, 0.09);
+  font-size: 0.813rem;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+/* 元信息表 */
+.meta-table {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+  margin: 0;
+  padding: 1.1rem 1.2rem;
+  border: var(--hair);
+  border-radius: var(--radius);
+  background: var(--paper-2);
+}
+.meta-table--wide { grid-template-columns: minmax(0, 1fr); }
+.meta-table dt {
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-4);
+  margin-bottom: 0.2rem;
+}
+.meta-table dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.813rem;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.meta-table__full { grid-column: 1 / -1; }
+
+.doc-panel__tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.doc-panel__tags .chip { flex: none; }
+.doc-panel__actions { display: flex; flex-direction: column; gap: 0.55rem; }
+.doc-panel__hint {
+  font-size: 0.688rem;
+  line-height: 1.7;
+  color: var(--ink-4);
+}
+
+/* 相关资料 */
+.related { border-top: var(--hair); padding-top: 1.1rem; }
+.related h2 {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 0.75rem;
+}
+.related__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.5rem;
+  border-radius: var(--radius-s);
+  transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.related__item:hover { background: rgba(23, 22, 26, 0.045); transform: translateX(2px); }
+.related__item .icon { width: 1rem; height: 1rem; color: var(--ink-4); flex: none; }
+.related__text { min-width: 0; }
+.related__text strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.related__text span { font-size: 0.688rem; color: var(--ink-4); font-family: var(--font-mono); }
+
+/* 移动端：信息面板折叠 */
+.panel-toggle { display: none; }
+.doc-bar__actions .panel-toggle[aria-expanded="true"] {
+  background: var(--paper-2);
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+@media (max-width: 860px) {
+  .doc-grid { grid-template-columns: minmax(0, 1fr); }
+  .doc-panel { border-right: 0; border-bottom: var(--hair); }
+  .doc-panel__inner { padding: 1.1rem 1.1rem 1.4rem; }
+  .doc-cover h1 { font-size: 1.3rem; }
+  /* 「资料信息」开关在移动端位于顶栏（见 doc-bar 规则） */
+  .doc-bar__actions .panel-toggle { display: inline-flex; }
+  /* 折叠状态只保留封面；展开后各元素沿用自身布局（grid / flex / block） */
+  .doc-panel:not(.is-open) .doc-panel__inner > :not(.doc-cover) { display: none; }
+  .doc-panel.is-open .doc-panel__inner > .doc-panel__actions { display: flex; }
+  .doc-panel.is-open .doc-panel__inner > .doc-panel__tags { display: flex; }
+  .meta-table { grid-template-columns: minmax(0, 1fr); }
+  /* 开始阅读后收起资料信息，把屏幕留给 PDF；点开关仍可展开 */
+  body.is-reading .doc-panel:not(.is-open) .doc-panel__inner { display: none; }
+
+  /* 触控目标与 iOS 聚焦放大集中在文件末尾的移动端段落中定义 */
+}
+
+/* ---------- 3. 阅读器 ---------- */
+.reader {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--paper-3);
+  overflow-x: clip;
+}
+
+/* 首次进入时的滑动提示（仅手机端出现，几秒后自动淡出） */
+.reader__hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(1.35rem + var(--safe-b));
+  z-index: 4;
+  padding: 0.5rem 0.9rem;
+  border: var(--hair);
+  border-radius: 99px;
+  background: var(--glass-2);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-1);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 320ms var(--ease), transform 320ms var(--ease);
+}
+.reader__hint.is-on { opacity: 1; transform: translate(-50%, 0); }
+/* 带操作按钮的提示（例如「继续阅读」） */
+.reader__hint--action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.9rem;
+  pointer-events: auto;
+}
+.reader__hint--action .btn {
+  min-height: 34px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.75rem;
+}
+.reader__hint--action .btn .icon { width: 0.95em; height: 0.95em; }
+
+/* 「复制链接」成功状态 */
+.doc-bar__actions .btn.is-done {
+  border-color: var(--seal);
+  color: var(--seal);
+}
+@media (min-width: 861px) { .reader__hint { display: none; } }
+@media (min-width: 861px) {
+  .reader { height: 100%; }
+}
+@media (max-width: 860px) {
+  /* 移动端：整页固定为「顶栏 + 剩余空间」，阅读器弹性填满，信息面板折叠时几乎全屏 */
+  .doc-grid {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - var(--docbar-h));
+    height: calc(100dvh - var(--docbar-h));
+    min-height: 0;
+  }
+  .doc-panel { flex: none; }
+  .reader {
+    flex: 1 1 auto;
+    min-height: 340px;
+    height: auto;
+  }
+  .reader__stage { min-height: 0; }
+}
+
+/* 横屏 / 矮屏手机：资料信息让位给阅读器 */
+@media (max-width: 860px) and (max-height: 560px) {
+  .doc-panel { display: none; }
+}
+
+.reader__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.45rem 0.75rem;
+  border-bottom: var(--hair);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  flex: none;
+}
+.reader__group { display: flex; align-items: center; gap: 0.25rem; }
+.reader__group--right { margin-left: auto; }
+.reader__sep { width: 1px; height: 18px; background: var(--line); margin-inline: 0.35rem; }
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.45rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-s);
+  color: var(--ink-2);
+  font-size: 0.75rem;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+.tool .icon { width: 1rem; height: 1rem; }
+.tool:hover { background: rgba(23, 22, 26, 0.06); color: var(--ink); }
+.tool[aria-disabled="true"], .tool:disabled { opacity: 0.32; pointer-events: none; }
+.tool[aria-pressed="true"] { border-color: var(--line-2); background: var(--paper-2); color: var(--ink); }
+
+.reader__page {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 32px;
+  padding: 0 0.5rem;
+  border: var(--hair);
+  border-radius: var(--radius-s);
+  background: var(--paper-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-2);
+}
+.reader__page input {
+  width: 3.1ch;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+.reader__page input:focus { outline: none; }
+.reader__zoom-label {
+  min-width: 4.2ch;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  text-align: center;
+}
+.reader__status {
+  font-family: var(--font-mono);
+  font-size: 0.688rem;
+  color: var(--ink-4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 720px) {
+  .reader__bar { gap: 0.3rem; }
+  .reader__status { display: none; }
+  .reader__sep { margin-inline: 0.2rem; }
+  .reader__zoom-label { display: none; }
+  .reader__group--right { gap: 0.15rem; }
+  /* 隐藏滚动条占位，画布更宽 */
+  .reader__stage { scrollbar-width: none; }
+  .reader__stage::-webkit-scrollbar { width: 0; height: 0; }
+}
+
+/* 进度条 */
+.reader__progress {
+  height: 2px;
+  background: transparent;
+  overflow: hidden;
+  flex: none;
+}
+.reader__progress i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--seal);
+  transition: width 200ms linear, opacity 400ms var(--ease);
+}
+.reader__progress.is-done i { opacity: 0; }
+
+/* 画布区 */
+.reader__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--paper-3);
+  background-image:
+    radial-gradient(rgba(23, 22, 26, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -11px -11px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.reader__stage canvas {
+  background: #fff;
+  border: 1px solid var(--line-2);
+  box-shadow: 0 18px 40px -26px rgba(23, 22, 26, 0.6), 0 2px 6px rgba(23, 22, 26, 0.06);
+  max-width: 100%;
+  height: auto;
+}
+
+/* 状态层 */
+.reader__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  background: var(--paper-3);
+  z-index: 3;
+}
+.reader__overlay[hidden] { display: none; }
+.reader__overlay h2 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  letter-spacing: 0.03em;
+}
+.reader__overlay p {
+  max-width: 40ch;
+  font-size: 0.813rem;
+  line-height: 1.8;
+  color: var(--ink-3);
+}
+.reader__overlay .btn { margin-top: 0.3rem; }
+/* 兜底按钮组：移动端堆叠成整宽按钮 */
+.overlay-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  max-width: 300px;
+}
+.overlay-actions .btn { margin-top: 0; width: 100%; }
+@media (min-width: 861px) {
+  .overlay-actions { flex-direction: row; justify-content: center; max-width: none; }
+  .overlay-actions .btn { width: auto; }
+}
+.reader__overlay--error { background: linear-gradient(180deg, var(--paper-2), var(--paper-3)); }
+.reader__overlay-icon {
+  width: 46px; height: 46px;
+  display: grid;
+  place-items: center;
+  border: var(--hair);
+  border-radius: 50%;
+  color: var(--ink-3);
+  background: var(--paper-2);
+}
+.reader__overlay-icon .icon { width: 1.35rem; height: 1.35rem; }
+
+/* 加载动画：极细的扫描线，不使用发光 */
+.spinner {
+  width: 34px; height: 34px;
+  border: 1px solid var(--line-2);
+  border-top-color: var(--ink-3);
+  border-radius: 50%;
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; border-top-color: var(--line-2); }
+}
+
+/* 未开始状态 */
+.reader__start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: 38ch;
+}
+.reader__start .eyebrow { letter-spacing: 0.2em; }
+
+/* 全屏 */
+.reader:fullscreen { height: 100vh; width: 100vw; background: var(--paper); }
+.reader:fullscreen .reader__stage { padding: 2rem; }
+.reader:fullscreen .reader__bar { background: var(--paper-2); }
+
+/* 打印：只打印画布 */
+@media print {
+  .doc-bar, .doc-panel, .reader__bar, .reader__progress { display: none !important; }
+  .doc-grid { display: block; height: auto; }
+  .reader__stage { overflow: visible; padding: 0; background: none; }
+  .reader__stage canvas { border: 0; box-shadow: none; }
+}
+
+
+/* ==========================================================================
+   移动端覆盖（放在文件末尾，确保优先级高于上方基础规则）
+   ========================================================================== */
+@media (max-width: 860px) {
+  /* 触控目标：工具栏按钮 44px，符合移动端可点按尺寸 */
+  .reader__bar {
+    padding: 0.4rem 0.5rem;
+    row-gap: 0.35rem;
+  }
+  .reader__group { min-width: 0; }
+  .tool { min-width: 44px; height: 44px; }
+  .tool .icon { width: 1.1rem; height: 1.1rem; }
+  .reader__page { height: 44px; padding: 0 0.6rem; }
+  .reader__page input { font-size: 16px; width: 3.4ch; }   /* >=16px 防止 iOS 聚焦时放大整页 */
+  .reader__zoom-label { font-size: 0.813rem; }
+
+  /* 阅读区：四周留白 + 底部安全区（iPhone 手势条） */
+  .reader__stage { padding: 0.9rem 0.75rem calc(1.5rem + var(--safe-b)); }
+  .reader__overlay { padding: 1.5rem 1.25rem calc(2rem + var(--safe-b)); }
+
+  /* 长标题/长路径不允许撑破容器 */
+  .doc-cover h1 { overflow-wrap: anywhere; }
+  .related__text strong { white-space: normal; }
+}
+
+@media (max-width: 720px) {
+  /* 手机上没有元素级全屏（iOS Safari 不支持），隐藏该按钮，把宽度让给翻页与缩放 */
+  .reader__bar [data-fullscreen] { display: none; }
+  /* 收紧间距，让「翻页 / 缩放 / 下载」尽量在 390px 宽度内排成一行 */
+  .reader__bar { gap: 0.2rem; column-gap: 0.2rem; }
+  .reader__sep { margin-inline: 0.1rem; }
+  .reader__page { padding: 0 0.45rem; }
+  .reader__page input { width: 2.8ch; }
+  /* 顶栏按钮加大到 44×44 点按面积（图标按钮同样不能窄于 44px） */
+  .doc-bar__actions .tool,
+  .doc-bar__actions .btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
