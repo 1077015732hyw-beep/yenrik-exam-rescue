@@ -12,13 +12,24 @@
   "updatedAt": "",
   "files": [{
   "id": "autocad-trapezoid",
-  "title": "工程制图 AutoCAD",
+  "title": "工程制图 AutoCAD:梯形",
   "titleEn": "",
   "category": "工程制图",
-  "description": "课堂作业：梯形",
+  "description": "课堂作业:梯形",
   "file": "./pdf/2026101301.dxf",
   "date": "2026-10-13",
   "featured": false,
   "keywords": ["工程制图", "梯形"]
+}
+  {
+  "id": "autocad-trapezoid",
+  "title": "工程制图 AutoCAD:五角星",
+  "titleEn": "",
+  "category": "工程制图",
+  "description": "课堂作业：五角星",
+  "file": "./pdf/2026101302.dxf",
+  "date": "2026-10-13",
+  "featured": false,
+  "keywords": ["工程制图", "五角星"]
 }]
 }
