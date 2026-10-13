@@ -10,16 +10,15 @@
     "其他"
   ],
   "updatedAt": "",
-  "files": []
-}
-{
-  "title": "工程制图AutoCAD",
+  "files": [{
+  "id": "autocad-trapezoid",
+  "title": "工程制图 AutoCAD",
+  "titleEn": "",
   "category": "工程制图",
-  "description": "课堂作业",
-  "file": "./pdf/2026101301.dxf",
-  "size": "106 KB",
-  "pages": 1,
+  "description": "课堂作业：梯形",
+  "file": "./pdf/drawing/autocad-trapezoid.dxf",
   "date": "2026-10-13",
   "featured": false,
-  "keywords": [" 工程制图", "梯形"]
+  "keywords": ["工程制图", "梯形"]
+}]
 }
