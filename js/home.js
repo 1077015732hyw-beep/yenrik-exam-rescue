@@ -28,6 +28,9 @@ const el = {
   statTotal:  $('[data-stat-total]'),
   statCats:   $('[data-stat-cats]'),
   statUpdated:$('[data-stat-updated]'),
+  libraryEmpty:$('[data-library-empty]'),
+  libraryNote:$('[data-library-note]'),
+  filtersBar:$('.filters'),
 };
 
 const state = { category: ALL, q: '', sort: 'date-desc' };
@@ -73,6 +76,19 @@ function visibleItems() {
 }
 
 /* ---------- 各区块渲染 ---------- */
+/** 一份资料都还没有时：隐藏推荐/最近，给出空态说明（课程分类仍然显示） */
+function applyEmptyLibraryState() {
+  const empty = library.total === 0;
+  document.getElementById('featured')?.toggleAttribute('hidden', empty);
+  document.getElementById('recent')?.toggleAttribute('hidden', empty);
+  if (el.libraryEmpty) el.libraryEmpty.hidden = !empty;
+  if (el.filtersBar) el.filtersBar.hidden = empty;
+  if (el.libraryNote && empty) {
+    el.libraryNote.textContent = '馆藏正在陆续上架。下面是课程分类，点进去就能看该课程已有的资料。';
+  }
+  document.documentElement.classList.toggle('is-empty-library', empty);
+}
+
 function renderHero() {
   if (el.statTotal) el.statTotal.textContent = String(library.total);
   if (el.statCats) el.statCats.textContent = String(library.categories.length);
@@ -122,11 +138,12 @@ function renderGrid() {
     .join('');
 
   const isEmpty = items.length === 0;
-  el.empty.hidden = !isEmpty;
-  if (isEmpty) {
+  const libraryEmpty = library.total === 0;
+  el.empty.hidden = !isEmpty || libraryEmpty;          // 空书库用专门的面板，不用这块
+  if (isEmpty && !libraryEmpty) {
     el.emptyHint.textContent = query
       ? `没有匹配「${query}」的资料，换一个关键词试试，或回到全部资料。`
-      : '这个分类暂时还没有资料。';
+      : `「${state.category}」下还没有资料，其它课程里也许有。`;
   }
 
   if (el.count) el.count.textContent = `显示 ${items.length} / ${library.total} 份`;
@@ -272,6 +289,7 @@ async function boot() {
 
   reveal = createRevealObserver();
   renderHero();
+  applyEmptyLibraryState();
   renderFeatured();
   renderRecent();
   // 从阅读页返回（含 bfcache 恢复）时刷新进度显示

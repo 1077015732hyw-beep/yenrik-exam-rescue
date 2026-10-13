@@ -7,7 +7,7 @@
    首页本身仍然不会自动加载任何 PDF——只有你在阅读页打开过的才会进缓存。
    ========================================================================== */
 
-const VERSION = 'shijuan-v2';
+const VERSION = 'shijuan-v3';
 const SHELL = `${VERSION}-shell`;
 const PDFS = `${VERSION}-pdfs`;
 const MAX_PDFS = 12;
@@ -27,6 +27,9 @@ const PRECACHE = [
   './js/util.js',
   './js/catalog.js',
   './js/progress.js',
+  './js/filetypes.js',
+  './js/dxf-view.js',
+  './js/stl-view.js',
   './js/hero.js',
   './js/home.js',
   './js/viewer.js',

@@ -199,7 +199,7 @@
           <span class="eyebrow">All Materials · 全部馆藏</span>
           <h2 id="library-title">全部书架</h2>
         </div>
-        <p class="section-head__note">全部馆藏。点「预览」当场翻开，点「下载」直接带走，没人记录你的借阅历史。</p>
+        <p class="section-head__note" data-library-note>全部馆藏。点「预览」当场翻开，点「下载」直接带走，没人记录你的借阅历史。</p>
       </div>
     </div>
 
@@ -223,6 +223,15 @@
     </div>
 
     <div class="wrap">
+      <div class="library-empty" data-library-empty hidden>
+        <p class="eyebrow">Empty Shelves · 书架正在补货</p>
+        <h3 class="serif">这一批资料还在上传</h3>
+        <p>讲义、真题和工程图纸会陆续放上来，届时按课程分门别类，在线就能翻开。</p>
+        <p class="library-empty__hint">
+          馆长：把文件放进 <code>pdf/&lt;课程&gt;/</code>，然后运行
+          <code>bash tools/add-material.sh</code> 即可上架。
+        </p>
+      </div>
       <div class="shelf-grid" data-grid></div>
       <div class="grid-empty" data-empty hidden>
         <strong>书架上没有找到这份资料</strong>

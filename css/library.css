@@ -751,6 +751,43 @@
 }
 .shelf-grid .book-card[hidden] { display: none; }
 
+/* 空书库（一份资料都还没有时） */
+.library-empty {
+  padding: clamp(2rem, 6vw, 3.25rem) clamp(1.4rem, 5vw, 2.75rem);
+  border: 1px dashed var(--line-2);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--paper-2), rgba(246, 244, 239, 0.5));
+  text-align: center;
+}
+.library-empty h3 {
+  margin: 0.7rem 0 0.7rem;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.library-empty > p {
+  max-width: 46ch;
+  margin-inline: auto;
+  font-size: 0.875rem;
+  line-height: 1.9;
+  color: var(--ink-2);
+}
+.library-empty__hint {
+  margin-top: 1.25rem !important;
+  padding-top: 1.1rem;
+  border-top: var(--hair);
+  font-size: 0.75rem !important;
+  color: var(--ink-4) !important;
+}
+.library-empty__hint code {
+  padding: 0.1em 0.4em;
+  border: var(--hair);
+  border-radius: 3px;
+  background: var(--paper-3);
+  font-family: var(--font-mono);
+}
+.library-empty + .shelf-grid:not(:empty) { margin-top: 1.15rem; }
+
 .grid-empty {
   padding: 3.5rem 1.5rem;
   border: 1px dashed var(--line-2);

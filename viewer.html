@@ -64,8 +64,8 @@
     <div class="doc-panel__inner" id="doc-panel-body">
       <div class="doc-cover" data-cover>
         <span class="doc-cover__glyph">
-          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-pdf"></use></svg>
-          Portable Document Format
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-pdf" data-cover-icon></use></svg>
+          <span data-cover-type>Portable Document Format</span>
         </span>
         <h1 data-cover-title>—</h1>
         <p class="doc-cover__latin" data-cover-latin></p>
@@ -79,7 +79,7 @@
         </a>
         <button class="btn btn--block" type="button" data-read-now>
           <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-eye"></use></svg>
-          在线阅读
+          <span>在线阅读</span>
         </button>
       </div>
 
@@ -88,8 +88,8 @@
       <div class="doc-panel__tags" data-tags></div>
 
       <p class="doc-panel__hint">
-        PDF 仅在打开本页、且浏览器开始阅读时才加载，不会占用首页流量。
-        在线阅读需联网；若加载失败，可直接下载原文。
+        文件仅在打开本页、且浏览器开始查看时才加载，不会占用首页流量。
+        在线预览需联网；若加载失败，可直接下载原件。
       </p>
 
       <div class="related" data-related hidden>
@@ -110,7 +110,7 @@
   <!-- ============ 右：PDF 阅读器 ============ -->
   <section class="reader" id="reader" data-reader aria-label="PDF 阅读器">
     <div class="reader__bar" role="toolbar" aria-label="阅读工具栏">
-      <div class="reader__group">
+      <div class="reader__group" data-group="pages">
         <button class="tool" type="button" data-prev aria-label="上一页" disabled>
           <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-chevron-left"></use></svg>
         </button>
@@ -125,9 +125,9 @@
         </button>
       </div>
 
-      <span class="reader__sep" aria-hidden="true"></span>
+      <span class="reader__sep" data-group="pages" aria-hidden="true"></span>
 
-      <div class="reader__group">
+      <div class="reader__group" data-group="zoom">
         <button class="tool" type="button" data-zoom-out aria-label="缩小" disabled>
           <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-minus"></use></svg>
         </button>
@@ -138,6 +138,16 @@
         <button class="tool" type="button" data-fit aria-label="适应宽度" aria-pressed="true" disabled>
           <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-fit"></use></svg>
         </button>
+      </div>
+
+      <div class="reader__group" data-group="three" hidden>
+        <button class="tool" type="button" data-wireframe aria-label="线框模式" aria-pressed="false">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-cube"></use></svg>
+        </button>
+        <button class="tool" type="button" data-reset-view aria-label="重置视角">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-refresh"></use></svg>
+        </button>
+        <span class="reader__sep" aria-hidden="true"></span>
       </div>
 
       <div class="reader__group reader__group--right">
@@ -157,18 +167,19 @@
     <div class="reader__hint" data-hint hidden></div>
 
     <div class="reader__stage" data-stage>
+      <img class="reader__image" data-image alt="" hidden>
       <canvas data-canvas hidden></canvas>
 
       <!-- 状态一：尚未开始 -->
       <div class="reader__overlay reader__overlay--start" data-overlay-start>
         <div class="reader__start">
           <span class="eyebrow">On-demand Preview</span>
-          <h2>需要时再打开这本书</h2>
-          <p>为节省流量，PDF 不会自动加载。点击下方按钮开始在线阅读，或直接下载原文。</p>
+          <h2>需要时再打开这份资料</h2>
+          <p>为节省流量，文件不会自动加载。点击下方按钮开始在线查看，或直接下载原件。</p>
           <div class="overlay-actions">
             <button class="btn btn--solid" type="button" data-read-now>
               <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-eye"></use></svg>
-              在线阅读
+              <span>在线阅读</span>
             </button>
             <a class="btn btn--ghost" href="#" data-download download>
               <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#i-download"></use></svg>

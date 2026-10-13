@@ -1,11 +1,15 @@
 # 拾卷 · 个人学习资料数字图书馆
 
-一个纯静态的个人学习资料图书馆：把 PDF 讲义、笔记与实验资料按学科归档到「书架」上，
-支持分类浏览、搜索、最近加入与推荐展示，并且可以在线阅读 PDF（按需加载）或直接下载原文。
+一个纯静态的学习资料馆：一位馆长上传，几位朋友翻阅。讲义、真题、图纸按**课程**归档到「书架」上，
+支持分类浏览、搜索、最近加入与推荐，并且可以**在线预览**（按需加载）或直接下载原件。
 
 - 技术栈：HTML + CSS + 原生 JavaScript（ES Modules），无构建步骤、无框架
 - 依赖：只有 [PDF.js](https://mozilla.github.io/pdf.js/)（已本地内置，CDN 仅作兜底）
 - 部署：可直接放到 GitHub Pages / Cloudflare Pages / Vercel 等任意静态托管
+- 定位：私人资料馆——无登录、无后端、无埋点；馆长上传，朋友随便翻
+- 课程分类：有机化学 / 生物化学 / 大学物理 / 工程制图 / 中国近代史纲要 / 其他
+- 在线预览：**PDF、DXF 图纸、STL 模型、图片**（DXF/STL 渲染器为自研，无第三方库）；
+  DWG / STEP / Office / 压缩包给出专属说明与下载入口
 
 ---
 
@@ -46,6 +50,9 @@ python3 -m http.server 8080
 │   ├── util.js           工具函数、JSON 读取与规范化、URL 解析
 │   ├── catalog.js        资料卡 / 台账 / 分类导航模板
 │   ├── progress.js       阅读进度记忆（localStorage，无后端）
+│   ├── filetypes.js      按扩展名判定类型与可预览性
+│   ├── dxf-view.js       自研 DXF 二维图纸渲染（图层颜色 / 块引用 / bulge 圆弧）
+│   ├── stl-view.js       自研 STL 三维渲染（软件光栅化 + 平面着色 + 线框）
 │   ├── pwa.js            注册 Service Worker / 「安装到主屏幕」入口
 │   ├── hero.js           Hero 的轻微视差（只改 CSS 变量）
 │   ├── home.js           首页控制器（分类、排序、搜索、状态同步）
@@ -54,7 +61,7 @@ python3 -m http.server 8080
 │   ├── files.json        运行时资料索引（首页与阅读页唯一数据来源）
 │   └── sources.json      资料源清单（新增资料时编辑它，可一键重建索引）
 ├── pdf/
-│   ├── biology/  chemistry/  physics/  mathematics/  english/  other/
+│   ├── organic-chemistry/  biochemistry/  physics/  drawing/  history/  other/
 ├── assets/
 │   ├── icons.svg         SVG 图标精灵
 │   ├── favicon.svg       站点图标
@@ -153,6 +160,22 @@ python3 -m http.server 8080
   对方打开后会落在同一页。
 
 ---
+
+## 4.5 支持的格式与在线预览
+
+| 格式 | 站内预览 | 说明 |
+| --- | --- | --- |
+| `.pdf` | ✅ PDF.js | 翻页、缩放、适应宽度、全屏、阅读进度记忆 |
+| `.dxf` | ✅ 自研二维渲染 | 图框、直线、圆、弧、多段线（含 bulge 圆角）、文字、椭圆、块引用（INSERT，支持缩放/旋转/嵌套）；按图层与 ACI 颜色上色；适应窗口 / 滚轮缩放 / 拖拽平移 |
+| `.stl` | ✅ 自研三维渲染 | 二进制与 ASCII 都支持；正交投影 + 画家算法 + 平面着色（亮度分档后批量绘制，手机上也能拖）；拖拽旋转、滚轮缩放、线框切换、重置视角 |
+| `.png .jpg .jpeg .webp .gif .svg .avif .bmp` | ✅ 图片查看 | 适应宽度 / 缩放 |
+| `.dwg .dwt .dws` | ⛔ 仅下载 | DWG 是 AutoCAD 专有格式，浏览器无法解析。**建议馆长从 CAD 另存一份 DXF 或 PDF 一起上传**，朋友就能在线看图 |
+| `.step .stp .iges .igs .obj` | ⛔ 仅下载 | 可另存一份 STL 一起上传 |
+| `.doc .docx .ppt .pptx .xls .xlsx …` | ⛔ 仅下载 | 想在线翻阅请同时导出一份 PDF |
+| `.zip .rar .7z …` | ⛔ 仅下载 | — |
+
+类型由扩展名自动判定；也可在该条资料里显式写 `"type": "dxf"` 覆盖（例如把其实是 DXF 的 `.dwg` 标出来）。
+不能预览的格式不会静默失败，而是显示「暂时无法在线预览」+ 该格式专属解释 + 醒目的下载按钮。
 
 ## 5. 手机端适配
 
@@ -289,8 +312,12 @@ git 由 Xcode Command Line Tools 提供（没装过终端会提示 `xcode-select
 
 ---
 
-## 8. 示例数据
+## 8. 示例数据与空书库
 
-仓库内的 20 份资料是自动生成的演示内容（`tools/make-pdfs.mjs`），
-只用于展示分类、卡片与阅读器效果。替换成自己的资料时，删除 `pdf/` 下的示例文件、
-更新 `data/sources.json`，再运行 `node tools/build-data.mjs` 即可。
+**当前书库是空的**：`data/sources.json` 的 `categories` 已按五门课设好，`files` 为空数组，
+`pdf/` 下保留了六个课程目录。0 份资料时首页显示「书架正在补货」空态
+（自动隐藏推荐 / 最近 / 筛选栏），课程分类仍然列出，方便逐步填充。
+
+- 上架第一份资料：`bash tools/add-material.sh`
+- 想再生成一批演示 PDF：`node tools/make-pdfs.mjs`（读 `data/sources.json`，需要先自行加回条目）
+- 不再需要演示生成器时可删除：`rm -rf tools/content tools/make-pdfs.mjs tools/pdf-manifest.json`

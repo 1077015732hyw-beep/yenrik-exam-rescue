@@ -152,9 +152,16 @@ case "$pdf" in
 esac
 [ -f "$pdf" ] || die "找不到文件：$pdf"
 
-case "$pdf" in
-  *.pdf|*.PDF) ;;
-  *) die "只支持 PDF（当前：$(basename "$pdf")）。其他格式请先转成 PDF。" ;;
+ext="$(printf '%s' "${pdf##*.}" | tr '[:upper:]' '[:lower:]')"
+case "$ext" in
+  pdf|dxf|dwg|dwt|dws|stl|step|stp|iges|igs|obj|png|jpg|jpeg|webp|gif|svg|avif|bmp|\doc|docx|rtf|odt|ppt|pptx|key|odp|xls|xlsx|csv|ods|zip|rar|7z|tar|gz) ;;
+  *) die "暂不支持这个格式（.${ext}）。可以传 PDF / DXF / STL / 图片 / Office / 压缩包。若是在线预览要用，建议先导出 PDF。" ;;
+esac
+
+# 站内能否在线预览
+case "$ext" in
+  pdf|dxf|stl|png|jpg|jpeg|webp|gif|svg|avif|bmp) preview="yes" ;;
+  *) preview="no" ;;
 esac
 
 bytes=$(wc -c < "$pdf" | tr -d ' ')
@@ -166,6 +173,14 @@ if [ "$bytes" -gt 52428800 ]; then
   dim "提示：文件较大（$((bytes / 1048576)) MB），打开会慢一些。"
 fi
 ok "已识别：$(basename "$pdf")（$(awk -v b="$bytes" 'BEGIN{printf (b>=1048576 ? "%.1f MB" : "%d KB"), (b>=1048576 ? b/1048576 : b/1024)}')）"
+if [ "$preview" = "no" ]; then
+  case "$ext" in
+    dwg|dwt|dws|step|stp|iges|igs|obj|doc|docx|rtf|odt|ppt|pptx|key|odp|xls|xlsx|csv|ods|zip|rar|7z|tar|gz)
+      dim "提示：.${ext} 不能在网页里在线预览，朋友点开会看到「暂时无法在线预览」+ 下载按钮。"
+      dim "      如果想让他们在线看图/看文，建议一并上传导出版：CAD → DXF 或 PDF；Office → PDF。"
+      ;;
+  esac
+fi
 say ""
 
 # ---------------------------------------------------------------- 2. 元数据
@@ -205,24 +220,14 @@ PY
 )"
 category="$(choose "学科分类：" 1 "$categories")"
 
-# 目录映射（实验资料 / 课程资料 是跨学科的，再问一句）
+# 分类 → 目录（课程名对应英文目录；未列出的分类统一进 other）
 case "$category" in
-  生物学)   folder="biology" ;;
-  化学)     folder="chemistry" ;;
-  物理)     folder="physics" ;;
-  数学)     folder="mathematics" ;;
-  英语)     folder="english" ;;
-  其他)     folder="other" ;;
-  实验资料|课程资料)
-    subject="$(choose "「${category}」是跨学科的，这份具体属于哪个学科？" 6 "生物学（biology）
-化学（chemistry）
-物理（physics）
-数学（mathematics）
-英语（english）
-其他（other）")"
-    folder="$(printf '%s' "$subject" | sed 's/.*（//; s/）//')"
-    ;;
-  *) folder="other" ;;
+  有机化学)       folder="organic-chemistry" ;;
+  生物化学)       folder="biochemistry" ;;
+  大学物理)       folder="physics" ;;
+  工程制图)       folder="drawing" ;;
+  中国近代史纲要) folder="history" ;;
+  *)              folder="other" ;;
 esac
 
 description="$(ask "一句话简介" "课程学习资料")"
@@ -239,13 +244,15 @@ case "$featured_raw" in y|Y|yes|YES) featured="true" ;; *) featured="false" ;; e
 [ "$featured" = "true" ] && featured_note="是" || featured_note="否"
 
 # ---------------------------------------------------------------- 3. 汇总确认
-target="pdf/${folder}/${slug}.pdf"
+target="pdf/${folder}/${slug}.${ext}"
 say ""
 say "── 即将写入 ─────────────────────────────────"
 printf ' %-10s %s\n' "id" "${slug}"
 printf ' %-10s %s\n' "标题" "${title}"
 printf ' %-10s %s（%s）\n' "分类" "${category}" "${target}"
-printf ' %-10s %s\n' "大小" "$(awk -v b="$bytes" 'BEGIN{printf (b>=1048576 ? "%.1f MB" : "%d KB"), (b>=1048576 ? b/1048576 : b/1024)}')（页数由脚本实测）"
+printf ' %-10s %s\n' "格式" ".${ext}（$( [ "$preview" = yes ] && echo 支持在线预览 || echo "仅提供下载" )）"
+if [ "$ext" = "pdf" ]; then size_note="大小与页数由脚本实测"; else size_note="大小由脚本实测"; fi
+printf ' %-10s %s\n' "大小" "$(awk -v b="$bytes" 'BEGIN{printf (b>=1048576 ? "%.1f MB" : "%d KB"), (b>=1048576 ? b/1048576 : b/1024)}')（${size_note}）"
 printf ' %-10s %s\n' "日期" "${date_value}"
 printf ' %-10s %s\n' "推荐" "${featured_note}"
 say "─────────────────────────────────────────────"
@@ -271,7 +278,7 @@ then
     fi
     dim "! id 只能用小写字母、数字与短横线，且至少 3 位。"
   done
-  target="pdf/${folder}/${slug}.pdf"
+  target="pdf/${folder}/${slug}.${ext}"
 fi
 
 if [ -f "$target" ]; then
@@ -345,16 +352,46 @@ if overwrite:
     print('OVERWRITE')
     sys.exit(0)
 
-# 追加：保持文件原有排版，只在 files 数组收尾前插入一条
+# 追加：保持文件原有排版，只在 files 数组收尾前插入一条。
+# 用括号配平（跳过字符串）精确定位 files 数组，空数组也能正确处理。
+def find_array_span(source, key='"files"'):
+    i = source.index(key)
+    start = source.index('[', i)
+    depth = 0
+    in_string = False
+    escaped = False
+    k = start
+    while k < len(source):
+        ch = source[k]
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == '\\':
+                escaped = True
+            elif ch == '"':
+                in_string = False
+        elif ch == '"':
+            in_string = True
+        elif ch == '[':
+            depth += 1
+        elif ch == ']':
+            depth -= 1
+            if depth == 0:
+                return start, k
+        k += 1
+    raise ValueError('定位不到 files 数组')
+
 block = textwrap.indent(json.dumps(entry, ensure_ascii=False, indent=2), '    ')
-idx = text.rstrip().rfind('\n  ]')
-if idx == -1:
-    # files 还是空数组（形如 "files": []）等特殊情况：退回结构化重写
-    data.setdefault('files', []).append(entry)
-    open(path, 'w', encoding='utf-8').write(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
-    print('FALLBACK')
-    sys.exit(0)
-new_text = text[:idx] + ',\n' + block + text[idx:]
+start, end = find_array_span(text)
+inner = text[start + 1:end]
+if inner.strip():
+    last = end - 1
+    while last > start and text[last] in ' \t\r\n':
+        last -= 1
+    last += 1                                  # 最后一个元素之后、']' 之前的空白起点
+    new_text = text[:last] + ',\n' + block + text[last:]
+else:
+    new_text = text[:start + 1] + '\n' + block + '\n  ' + text[end:]
 try:
     parsed = json.loads(new_text)
     assert parsed['files'][-1]['id'] == entry['id']
@@ -371,7 +408,8 @@ info="$(python3 - "$slug" <<'PY'
 import json, sys
 data = json.load(open('data/files.json', encoding='utf-8'))
 item = next((f for f in data['files'] if f.get('id') == sys.argv[1]), None)
-print('—' if not item else f"{item['size']} · {item['pages']} 页 · 共 {len(data['files'])} 份资料")
+pages = item.get('pages') if item else None
+print('—' if not item else f"{item['size']} · {pages} 页 · 共 {len(data['files'])} 份资料" if pages else f"{item['size']} · 共 {len(data['files'])} 份资料")
 PY
 )"
 ok "索引已重建：${slug} → ${info}"

@@ -1,13 +1,19 @@
 /* ==========================================================================
-   viewer.js — 阅读页：资料信息 + PDF.js 阅读器
-   要点：
-   · PDF.js 与 PDF 文件都在用户开始阅读后才加载（动态 import + 按需 getDocument）
-   · 单页渲染，翻页 / 缩放 / 适应宽度 / 全屏 / 下载 / 键盘快捷键
-   · 加载失败时给出「暂时无法在线预览」与醒目的下载入口
+   viewer.js — 阅读页：资料信息 + 按类型分派的在线预览
+   支持的类型（由扩展名判定，JSON 里可用 "type" 覆盖）：
+     · pdf   → PDF.js，单页翻页 / 缩放 / 适应宽度
+     · image → 图片查看（适应宽度 / 缩放）
+     · dxf   → 自研二维图纸渲染（js/dxf-view.js）
+     · stl   → 自研三维模型渲染（js/stl-view.js）
+     · 其它（dwg/step/office/压缩包…）→ 明确提示 + 醒目的下载入口
+   所有类型都在用户点击/进入后才加载文件，且都复用「暂时无法在线预览」兜底。
    ========================================================================== */
 
 import { $, $$, esc, icon, resolve, loadLibrary, formatDateLong, isSmallScreen, debounce } from './util.js';
 import { getProgress, saveProgress } from './progress.js';
+import { fileType, unsupportedHint } from './filetypes.js';
+import { createDxfView } from './dxf-view.js';
+import { createStlView } from './stl-view.js';
 
 /* PDF.js 本地优先、CDN 兜底；cmaps/字体等非常用资源按需从 CDN 取。
    本地文件刻意使用 .js 后缀：静态托管（如 GitHub Pages）对 .mjs 的 MIME
@@ -24,6 +30,12 @@ const el = {
   copyLink:    $('[data-copy-link]'),
   copyLinkText:$('[data-copy-link-text]'),
   hint:        $('[data-hint]'),
+  stage:       $('[data-stage]'),
+  image:       $('[data-image]'),
+  coverIcon:   $('[data-cover-icon]'),
+  coverType:   $('[data-cover-type]'),
+  wireframe:   $('[data-wireframe]'),
+  resetView:   $('[data-reset-view]'),
   cat:         $('[data-doc-cat]'),
   catText:     $('[data-doc-cat-text]'),
   catDot:      $('[data-doc-dot]'),
@@ -79,6 +91,10 @@ const state = {
   swipeHint: window.matchMedia('(max-width: 860px)').matches,
   swipeHintShown: false,
   resumeChecked: false,
+  type: null,          // filetypes.js 判定出的类型
+  mode: 'pdf',         // 预览方式：pdf / image / dxf / stl / none
+  view: null,          // dxf / stl 渲染器实例
+  imageScale: 1,       // 图片缩放（1 = 适应宽度）
 };
 
 const stagePadding = () => (isSmallScreen() ? 24 : 48);
@@ -94,6 +110,7 @@ function showOverlay(which) {
 function showError({ title, hint } = {}) {
   if (title) el.overlayError.querySelector('h2').textContent = title;
   if (hint) el.errorHint.textContent = hint;
+  if (el.retry) el.retry.hidden = false;
   el.overlayError.querySelector('[data-download]').hidden = !state.item;
   showOverlay('error');
   setStatus('加载失败');
@@ -154,12 +171,31 @@ function setProgress(ratio, { done = false } = {}) {
   el.progressBar.style.width = `${Math.max(3, Math.min(100, ratio * 100)).toFixed(1)}%`;
 }
 
+const ALL_CONTROLS = () => [el.prev, el.next, el.pageInput, el.zoomIn, el.zoomOut,
+  el.fit, el.fullscreen, el.wireframe, el.resetView];
+
 function setControlsEnabled(on) {
-  [el.prev, el.next, el.zoomIn, el.zoomOut, el.fit, el.fullscreen, el.pageInput].forEach((node) => {
-    if (!node) return;
-    node.disabled = !on;
-  });
+  const perMode = {
+    pdf:   [el.prev, el.next, el.pageInput, el.zoomIn, el.zoomOut, el.fit, el.fullscreen],
+    image: [el.zoomIn, el.zoomOut, el.fit, el.fullscreen],
+    dxf:   [el.zoomIn, el.zoomOut, el.fit, el.fullscreen],
+    stl:   [el.zoomIn, el.zoomOut, el.fit, el.fullscreen, el.wireframe, el.resetView],
+    none:  [el.fullscreen],
+  };
+  ALL_CONTROLS().forEach((node) => { if (node) node.disabled = true; });
+  if (on) (perMode[state.mode] || perMode.pdf).forEach((node) => { if (node) node.disabled = false; });
   updatePager();
+}
+
+/** 按预览方式显示/隐藏工具栏分组 */
+function applyMode(mode) {
+  state.mode = mode;
+  $$('[data-group="pages"]').forEach((node) => { node.hidden = mode !== 'pdf'; });
+  $$('[data-group="zoom"]').forEach((node) => { node.hidden = mode === 'none'; });
+  $$('[data-group="three"]').forEach((node) => { node.hidden = mode !== 'stl'; });
+  el.stage?.classList.toggle('is-fixed', mode === 'dxf' || mode === 'stl');
+  el.fit?.setAttribute('aria-label', mode === 'stl' ? '重置视角' : '适应宽度');
+  document.body.dataset.readerMode = mode || 'none';
 }
 
 /* ============================ 信息面板 ============================ */
@@ -172,6 +208,23 @@ function renderInfo(item, library) {
   el.coverDesc.textContent = item.description || '暂无简介。';
   el.cover.dataset.cat = item.category;
 
+  const type = state.type || fileType(item.file, item.type);
+  state.type = type;
+  if (el.coverType) el.coverType.textContent = type.name;
+  el.coverIcon?.setAttribute('href', `assets/icons.svg#${type.icon}`);
+  // 按钮文案随类型变化（不是 PDF 就不说「下载 PDF」）
+  const downloadLabel = type.preview === 'pdf' ? '下载 PDF' : '下载原件';
+  const readLabel = type.preview === 'pdf' ? '在线阅读' : (type.preview ? '在线查看' : '在线预览不可用');
+  $$('[data-download], [data-doc-download], [data-panel-download]').forEach((a) => {
+    const span = a.querySelector('span');
+    if (span) span.textContent = downloadLabel;
+    else if (a.classList.contains('btn')) a.textContent = downloadLabel;
+  });
+  $$('[data-read-now]').forEach((btn) => {
+    const span = btn.querySelector('span');
+    if (span) span.textContent = readLabel;
+  });
+
   if (el.catText) el.catText.textContent = item.category;
   if (el.catDot) el.catDot.dataset.cat = item.category;
   if (el.cat) el.cat.hidden = false;
@@ -183,14 +236,23 @@ function renderInfo(item, library) {
     a.setAttribute('download', suggested);
   });
 
-  const rows = [
-    ['学科分类', item.category],
-    ['文件大小', item.size],
-    ['页数', item.pages ? `${item.pages} 页` : '—', '', 'pages'],
-    ['更新时间', item.date, formatDateLong(item.date)],
-    ['资料编号', item.id, '', 'full'],
-    ['文件路径', item.file.replace(/^\.\//, ''), '', 'full'],
-  ];
+  const rows = type.preview === 'pdf'
+    ? [
+      ['学科分类', item.category],
+      ['文件大小', item.size],
+      ['页数', item.pages ? `${item.pages} 页` : '—', '', 'pages'],
+      ['更新时间', item.date, formatDateLong(item.date)],
+      ['资料编号', item.id, '', 'full'],
+      ['文件路径', item.file.replace(/^\.\//, ''), '', 'full'],
+    ]
+    : [
+      ['学科分类', item.category],
+      ['文件大小', item.size],
+      ['文件类型', type.label + (type.ext ? `（.${type.ext}）` : ''), '', 'pages'],
+      ['在线预览', type.preview ? '支持' : '暂不支持，可下载', '', 'pages'],
+      ['资料编号', item.id, '', 'full'],
+      ['文件路径', item.file.replace(/^\.\//, ''), '', 'full'],
+    ];
   el.meta.innerHTML = rows
     .map(([k, v, title, flag]) => {
       const cls = flag === 'full' ? ' class="meta-table__full"' : '';
@@ -215,7 +277,9 @@ function renderInfo(item, library) {
           ${icon('i-file')}
           <span class="related__text">
             <strong>${esc(other.title)}</strong>
-            <span>${esc(other.size)} · ${other.pages ? esc(other.pages) + ' 页' : '—'}</span>
+            <span>${esc(other.size)} · ${other.pages && fileType(other.file, other.type).preview === 'pdf'
+              ? esc(other.pages) + ' 页'
+              : esc(fileType(other.file, other.type).label)}</span>
           </span>
         </a>`)
       .join('');
@@ -236,13 +300,133 @@ async function loadPdfjs() {
   }
 }
 
-async function start({ force = false } = {}) {
+/** 按类型分派：进入阅读页后/点击「在线阅读」时调用 */
+async function startPreview({ force = false } = {}) {
+  const type = state.type || fileType(state.item?.file, state.item?.type);
+  applyMode(type.preview);
+  switch (type.preview) {
+    case 'pdf':   return startPdf({ force });
+    case 'image': return startImage();
+    case 'dxf':   return startDxf();
+    case 'stl':   return startStl();
+    default:      return showUnsupported(type);
+  }
+}
+
+/* ---------------- 图片预览 ---------------- */
+function applyImageScale() {
+  const img = el.image;
+  if (!img || !img.naturalWidth) return;
+  const fit = Math.min(1, (el.stage.clientWidth - 48) / img.naturalWidth);
+  const width = Math.round(img.naturalWidth * fit * state.imageScale);
+  img.style.maxWidth = 'none';
+  img.style.width = `${width}px`;
+}
+
+function startImage() {
+  const img = el.image;
+  const url = resolve(state.item.file);
+  showOverlay('loading');
+  setProgress(0.3);
+  img.hidden = false;
+  el.canvas.hidden = true;
+  img.onload = () => {
+    state.imageScale = 1;
+    applyImageScale();
+    showOverlay('none');
+    setProgress(1, { done: true });
+    setStatus(`${img.naturalWidth} × ${img.naturalHeight} 像素`);
+    setControlsEnabled(true);
+    document.body.classList.add('is-reading');
+  };
+  img.onerror = () => showError({
+    title: '暂时无法在线预览',
+    hint: '图片加载失败，可能文件缺失或格式不被浏览器支持。可以下载原件后用本地软件打开。',
+  });
+  img.src = url;
+}
+
+function zoomImage(factor) {
+  state.imageScale = Math.max(0.2, Math.min(6, state.imageScale * factor));
+  applyImageScale();
+  setStatus(`缩放 ${(state.imageScale * 100).toFixed(0)}%`);
+}
+
+/* ---------------- DXF 图纸预览 ---------------- */
+async function startDxf() {
+  showOverlay('loading');
+  setProgress(0.25);
+  el.canvas.hidden = false;
+  el.image.hidden = true;
+  try {
+    if (!state.view) state.view = createDxfView(el.canvas, { onStatus: (t) => setStatus(t) });
+    const info = await state.view.load(resolve(state.item.file));
+    showOverlay('none');
+    setProgress(1, { done: true });
+    setStatus(`${info.primitives} 个图元 · ${info.layers} 个图层${info.skipped ? ` · 跳过 ${info.skipped} 个实体` : ''}`);
+    setControlsEnabled(true);
+    document.body.classList.add('is-reading');
+  } catch (error) {
+    console.error('[viewer] DXF 渲染失败：', error);
+    showError({
+      title: '暂时无法在线预览',
+      hint: '这张图纸没能解析成功。可能是 DXF 版本较新、或包含大量暂不支持的实体（如 SPLINE、HATCH）。'
+        + '可以下载后用 CAD 打开，或请馆长另存一份 PDF。',
+    });
+  }
+}
+
+/* ---------------- STL 三维预览 ---------------- */
+async function startStl() {
+  showOverlay('loading');
+  setProgress(0.25);
+  el.canvas.hidden = false;
+  el.image.hidden = true;
+  try {
+    if (!state.view) {
+      state.view = createStlView(el.canvas, {
+        onStatus: (t) => setStatus(t),
+        prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      });
+    }
+    const info = await state.view.load(resolve(state.item.file));
+    showOverlay('none');
+    setProgress(1, { done: true });
+    setStatus(`${info.triangles.toLocaleString()} 个三角面 · 拖拽旋转`);
+    setControlsEnabled(true);
+    document.body.classList.add('is-reading');
+  } catch (error) {
+    console.error('[viewer] STL 渲染失败：', error);
+    showError({
+      title: '暂时无法在线预览',
+      hint: '这个模型没能解析成功（支持二进制与 ASCII 的 STL）。可以下载后用建模软件打开。',
+    });
+  }
+}
+
+/* ---------------- 不支持在线预览的类型 ---------------- */
+function showUnsupported(type) {
+  applyMode('none');
+  showOverlay('error');
+  el.overlayError.querySelector('h2').textContent = '暂时无法在线预览';
+  el.errorHint.textContent = unsupportedHint(type);
+  if (el.retry) el.retry.hidden = true;              // 重试没有意义
+  el.overlayError.querySelector('[data-download]').hidden = false;
+  setStatus(`${type.label} · 仅提供下载`);
+  setProgress(0, { done: true });
+  setControlsEnabled(false);
+}
+
+async function startPdf({ force = false } = {}) {
   if (state.loading) return;
   if (state.pdf && !force) return;
   if (!state.item) return;
 
   state.loading = true;
   state.started = true;
+  applyMode('pdf');
+  el.image.hidden = true;
+  el.canvas.hidden = false;
   showOverlay('loading');
   setProgress(0.04);
   setStatus('加载中…');
@@ -404,6 +588,7 @@ function showOfflineStart() {
 
 /** 用 PDF.js 实测页数回填元信息（data/files.json 里 pages 缺失或不准时自动纠正） */
 function syncPageCount() {
+  if (state.mode !== 'pdf') return;
   const cell = el.meta?.querySelector('[data-meta-pages] dd');
   if (!cell || !state.pdf) return;
   const text = `${state.pdf.numPages} 页`;
@@ -434,7 +619,7 @@ const syncHash = debounce(() => {
 
 /* ============================ 交互绑定 ============================ */
 const rememberProgress = debounce((page) => {
-  if (!state.item || !state.pdf) return;
+  if (!state.item || !state.pdf || state.mode !== 'pdf') return;
   saveProgress(state.item.id, page, state.pdf.numPages);
 }, 500);
 
@@ -477,6 +662,12 @@ function go(delta) {
 }
 
 function zoom(delta) {
+  const factor = delta > 0 ? 1.15 : 1 / 1.15;
+  if (state.mode === 'image') return zoomImage(factor);
+  if (state.mode === 'dxf' || state.mode === 'stl') {
+    state.view?.zoomBy(factor);
+    return;
+  }
   if (!state.pdf) return;
   state.fitWidth = false;
   state.scale = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, state.scale + delta));
@@ -484,6 +675,14 @@ function zoom(delta) {
 }
 
 function fitWidth() {
+  if (state.mode === 'image') {
+    state.imageScale = 1;
+    applyImageScale();
+    setStatus('适应宽度');
+    return;
+  }
+  if (state.mode === 'dxf') { state.view?.fit(); return; }
+  if (state.mode === 'stl') { state.view?.resetView(); setStatus('已重置视角'); return; }
   if (!state.pdf) return;
   state.fitWidth = true;
   renderPage(state.page).catch(handleRenderError);
@@ -504,7 +703,18 @@ function bindControls() {
   el.zoomIn?.addEventListener('click', () => zoom(ZOOM_STEP));
   el.zoomOut?.addEventListener('click', () => zoom(-ZOOM_STEP));
   el.fit?.addEventListener('click', fitWidth);
-  el.retry?.addEventListener('click', () => start({ force: true }));
+  el.retry?.addEventListener('click', () => startPreview({ force: true }));
+  el.wireframe?.addEventListener('click', () => {
+    if (state.mode !== 'stl' || !state.view) return;
+    const next = !state.view.getWireframe();
+    state.view.setWireframe(next);
+    el.wireframe.setAttribute('aria-pressed', String(next));
+    setStatus(next ? '线框模式' : '实体模式');
+  });
+  el.resetView?.addEventListener('click', () => {
+    state.view?.resetView();
+    setStatus('已重置视角');
+  });
   el.copyLink?.addEventListener('click', copyShareLink);
 
   // 「继续阅读」按钮由提示浮层动态生成
@@ -528,7 +738,7 @@ function bindControls() {
   $$('[data-read-now]').forEach((btn) => {
     btn.addEventListener('click', () => {
       if (isSmallScreen() && el.panel.classList.contains('is-open')) togglePanel(false);
-      start();
+      startPreview();
       el.reader.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
@@ -556,8 +766,14 @@ function bindControls() {
     const tag = document.activeElement?.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || event.metaKey || event.ctrlKey || event.altKey) return;
     switch (event.key) {
-      case 'ArrowRight': case 'PageDown': go(1); break;
-      case 'ArrowLeft':  case 'PageUp':   go(-1); break;
+      case 'ArrowRight': case 'PageDown':
+        if (state.mode === 'pdf') go(1);
+        else if (state.mode === 'image' || state.mode === 'dxf' || state.mode === 'stl') zoom(1);
+        break;
+      case 'ArrowLeft': case 'PageUp':
+        if (state.mode === 'pdf') go(-1);
+        else if (state.mode === 'image' || state.mode === 'dxf' || state.mode === 'stl') zoom(-1);
+        break;
       case 'Home': if (state.pdf) renderPage(1, { scrollTop: true }).catch(handleRenderError); break;
       case 'End':  if (state.pdf) renderPage(state.pdf.numPages, { scrollTop: true }).catch(handleRenderError); break;
       case '+': case '=': zoom(ZOOM_STEP); break;
@@ -571,8 +787,10 @@ function bindControls() {
 
   // 尺寸变化：适应宽度模式下重新渲染
   const onResize = debounce(() => {
-    if (!state.pdf) return;
     state.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (state.mode === 'image') { applyImageScale(); return; }
+    if (state.mode === 'dxf' || state.mode === 'stl') { state.view?.resize(); return; }
+    if (!state.pdf) return;
     if (state.fitWidth) renderPage(state.page).catch(() => {});
   }, 180);
   window.addEventListener('resize', onResize);
@@ -598,7 +816,7 @@ function bindGestures() {
 
   stage.addEventListener('touchstart', (event) => {
     tracking = false;
-    if (!state.pdf || event.touches.length !== 1) return;
+    if (state.mode !== 'pdf' || !state.pdf || event.touches.length !== 1) return;
     // 放大后需要横向拖动查看内容，此时不接管手势
     if (el.canvas.getBoundingClientRect().width > stage.clientWidth * 1.02) return;
     const touch = event.touches[0];
@@ -676,25 +894,34 @@ async function boot() {
   }
 
   state.item = item;
+  state.type = fileType(item.file, item.type);
+  applyMode(state.type.preview);
   renderInfo(item, library);
   bindControls();
 
-  // 省流模式 / 离线：不主动发请求；但若这份 PDF 已经缓存过，离线也能直接读
+  // 已知不支持在线预览的格式：直接给出说明与下载入口，不发任何请求
+  if (!state.type.preview) {
+    showUnsupported(state.type);
+    if (isSmallScreen()) togglePanel(false);
+    return;
+  }
+
+  // 省流模式 / 离线：不主动发请求；但若这份文件已经缓存过，离线也能直接看
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const saveData = Boolean(conn?.saveData) || /2g/.test(conn?.effectiveType || '');
   if (!navigator.onLine) {
     if (await isFileCached(resolve(item.file))) {
-      setStatus('离线阅读（本地缓存）');
-      start();
+      setStatus('离线查看（本地缓存）');
+      startPreview();
     } else {
       showOfflineStart();
     }
   } else if (saveData) {
     showOverlay('start');
-    setStatus('省流模式：PDF 未加载');
+    setStatus('省流模式：文件未加载');
     setControlsEnabled(false);
   } else {
-    start();
+    startPreview();
   }
 
   if (isSmallScreen()) togglePanel(false);

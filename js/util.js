@@ -105,11 +105,12 @@ export function normalizeLibrary(raw) {
       };
     });
 
-  // 分类顺序：优先使用 JSON 中声明的顺序，其余按出现顺序追加
+  // 分类顺序：以 JSON 中声明的顺序为准（即使该分类下暂时还没有资料，
+  // 也保留在导航里，相当于一份「课程清单」）；未声明的分类按出现顺序追加。
   const declared = Array.isArray(raw?.categories) ? raw.categories.map(String) : [];
   const present = [...new Set(items.map((i) => i.category))];
   const ordered = [
-    ...declared.filter((c) => c !== '全部资料' && present.includes(c)),
+    ...declared.filter((c) => c !== '全部资料'),
     ...present.filter((c) => !declared.includes(c)),
   ];
 
